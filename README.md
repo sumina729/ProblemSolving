@@ -1,8 +1,9 @@
 # ProblemSolving
 [![Solved.ac Profile](http://mazassumnida.wtf/api/v2/generate_badge?boj=sumina729)](https://solved.ac/sumina729)
 
-https://github.com/sumina729/ProblemSolving/blob/main/%E1%84%86%E1%85%AE%E1%84%8C%E1%85%A6.jpg
-https://complete-stage-60f.notion.site/c3983aa39987431285c825dff8e52c13?pvs=4
+[![아줌마 개발일지](https://github.com/sumina729/ProblemSolving/blob/main/%E1%84%86%E1%85%AE%E1%84%8C%E1%85%A6.jpg)](https://complete-stage-60f.notion.site/c3983aa39987431285c825dff8e52c13?pvs=4)
+
+
 
 ### **알고리즘 기초**
 
