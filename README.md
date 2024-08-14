@@ -1,6 +1,9 @@
 # ProblemSolving
 [![Solved.ac Profile](http://mazassumnida.wtf/api/v2/generate_badge?boj=sumina729)](https://solved.ac/sumina729)
 
+
+https://complete-stage-60f.notion.site/c3983aa39987431285c825dff8e52c13?pvs=4
+
 ### **알고리즘 기초**
 
 [자료구조](https://www.notion.so/426bdbc0a6d54530abb91bb018108ec2?pvs=21)
