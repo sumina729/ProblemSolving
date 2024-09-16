@@ -22,13 +22,11 @@ for _ in range(N):
     
     count = 0
     if num == 4:
-        count = 2
+        count = 1
     for i in range(3, num, 2):
         if array[i] and array[num-i]:
+            if i > num-i :
+                break
             count +=1
-            if(i == num-i): count +=1
-            # print(f"{num} = {i} + {num-i} ")
-            # break
     
-    print(count//2)
-    
+    print(count)
