@@ -1,47 +1,60 @@
-import sys
 from collections import deque
 
-M, N, H = map(int, sys.stdin.readline().split())
-maps = [[list(map(int, sys.stdin.readline().split())) for _ in range(N)]for _ in range(H)]
-visited = [[[-1 for _ in range(M)]for _ in range(N)]for _ in range(H)]
-resert = 0
+#가로, 세로, 높이
+M, N, H = map(int, input().split())
+
+graph = []
+
+for _ in range(H):
+    tmp = []
+    for _ in range(N): 
+        tmp.append(list(map(int, input().split())))
+    graph.append(tmp)
+        
+
+# graph[h][y][x]
+
+que = deque()
+for h in range(H):
+        for y in range(N):
+            for x in range(M):
+                if graph[h][y][x] == 1:
+                    que.append((x, y, h))
+
 
 def bfs():
-    global resert
-    q = deque()
-    for k in range(H):
-        for i in range(N):
-            for j in range(M):
-                    if maps[k][i][j] == 1:
-                        q.append((j, i, k))
-                        visited[k][i][j] = 0
+    dx = [1, 0, -1, 0, 0, 0]
+    dy = [0, 1, 0, -1, 0, 0]
+    dh = [0, 0, 0, 0, 1, -1]
 
-    while(len(q)!=0):
-        x, y, h= q.popleft()
-        dx, dy, dh= [0,0,-1,1, 0, 0], [-1,1,0,0, 0, 0], [0, 0, 0, 0, 1, -1]
+    while que:
+        x, y, h = que.popleft()
 
         for i in range(6):
-            nx, ny, nh = dx[i] + x, dy[i] + y, dh[i] + h
-            if 0 <= nx < M and 0 <= ny < N and 0 <= nh < H and visited[nh][ny][nx] == -1:
-                if maps[nh][ny][nx] == -1:
-                    visited[nh][ny][nx] = -2
-                elif maps[nh][ny][nx] == 1:
-                    visited[nh][ny][nx] = visited[nh][ny][nx]
-                elif maps[nh][ny][nx] == 0:
-                    visited[nh][ny][nx] = visited[h][y][x] + 1
-                    maps[nh][ny][nx] = 1
-                    resert = visited[nh][ny][nx]
-                    q.append((nx,ny, nh))
-    
+            tx = x+dx[i]
+            ty = y+dy[i]
+            th = h+dh[i]
+
+            if -1 < tx < M and -1 < ty < N and -1 < th < H and graph[th][ty][tx]==0:
+                graph[th][ty][tx] = graph[h][y][x] +1
+                que.append((tx, ty, th))
 
 bfs()
-is_no = False
-for k in range(H):
-        for i in range(N):
-            for j in range(M):
-                if maps[k][i][j] == 0 :
-                        is_no = True
-                        break
+    
 
-if is_no : print(-1)
-else : print(resert)
+
+is_ans = 1
+ans = 0
+for h in range(H):
+    for y in range(N):
+        for x in range(M):
+            if graph[h][y][x] == 0:
+                is_ans = 0
+                
+    
+            ans = max(ans, graph[h][y][x])
+
+if is_ans:
+    print(ans-1)
+else:
+    print(-1)
