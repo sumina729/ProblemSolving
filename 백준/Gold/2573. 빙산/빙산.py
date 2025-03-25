@@ -1,60 +1,70 @@
-import sys
 from collections import deque
-input = sys.stdin.readline
+N, M = map(int, input().split())
 
-
-def bfs(x, y):
-    q = deque([(x, y)])
-    visited[x][y] = 1
-    seaList = []
-
-    while q:
-        x, y = q.popleft()
-        sea = 0
-        for i in range(4):
-            nx = x + dx[i]
-            ny = y + dy[i]
-            if 0 <= nx < n and 0 <= ny < m:
-                if not graph[nx][ny]:
-                    sea += 1
-                elif graph[nx][ny] and not visited[nx][ny]:
-                    q.append((nx, ny))
-                    visited[nx][ny] = 1
-        if sea > 0:
-            seaList.append((x, y, sea))
-    for x, y, sea in seaList:
-        graph[x][y] = max(0, graph[x][y] - sea)
-
-    return 1
-
-
-n, m = map(int, input().split())
-graph = [list(map(int, input().split())) for _ in range(n)]
-
-ice = []
-for i in range(n):
-    for j in range(m):
-        if graph[i][j]:
-            ice.append((i, j))
+graph = [list(map(int, input().split()))for _ in range(N)]
+visit = [[0 for _ in range(M)] for _ in range(N)]
 
 dx = [-1, 1, 0, 0]
 dy = [0, 0, -1, 1]
-year = 0
 
-while ice:
-    visited = [[0] * m for _ in range(n)]
-    delList = []
-    group = 0
-    for i, j in ice:
-        if graph[i][j] and not visited[i][j]:
-            group += bfs(i, j)
-        if graph[i][j] == 0:
-            delList.append((i, j))
-    if group > 1:
+
+b_list = []
+for y in range(N):
+    for x in range(M):
+        if graph[y][x] > 0:
+            b_list.append((x, y))
+
+def bfs(x, y):
+    que = deque()
+    que.append((x, y))
+    visit[y][x] = 1
+
+    m_list = []
+
+    while que:
+        x, y = que.popleft()
+
+        ac = 0
+        for i in range(4):
+            nx, ny = x+dx[i], y+dy[i]
+            
+            if -1 < nx < M and -1 < ny < N :
+                if graph[ny][nx] == 0: #바다이면
+                    ac+=1
+                elif visit[ny][nx] == 0: # 바다 아닌데, 방문 안되거면
+                    que.append((nx, ny))
+                    visit[ny][nx] = 1
+        m_list.append((x, y, ac))
+
+    for x, y, ac in m_list:
+        graph[y][x] = max(0, graph[y][x] - ac)
+
+    # print()
+    # for i in range(N):
+    #     print(*visit[i])
+    
+
+year = 0
+while True:
+    cnt = 0
+    db_list = []
+    visit = [[0 for _ in range(M)] for _ in range(N)]
+
+    if not b_list:
+        print(0)
+        break
+    for x, y in b_list:
+        if visit[y][x] == 0:
+            cnt+=1
+            bfs(x, y)
+        if graph[y][x] == 0:
+            db_list.append((x, y))   
+
+    if cnt > 1:
         print(year)
         break
-    ice = sorted(list(set(ice) - set(delList)))
-    year += 1
 
-if group < 2:
-    print(0)
+    b_list = list(set(b_list) - set(db_list)) 
+    year+=1
+
+    
