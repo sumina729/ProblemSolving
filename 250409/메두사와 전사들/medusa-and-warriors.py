@@ -10,7 +10,8 @@ def bfs(x, y):
     que.append((x, y))
 
 
-    tmp_pan = [[[] for _ in range(N)] for _ in range(N)]
+    # tmp_pan = [[[] for _ in range(N)] for _ in range(N)]
+    tmp_pan = [[None for _ in range(N)] for _ in range(N)]
     visit[y][x] = 1
 
     while que:
@@ -18,7 +19,7 @@ def bfs(x, y):
 
         if x == ex and y == ey:
             break
-        for i in range(4):
+        for i in [0, 1, 2, 3]:
             nx = x + dx[i]
             ny = y + dy[i]
 
@@ -173,7 +174,7 @@ def see(mx, my, d):
         if -1<sx<N and -1<sy<N:
             if not see_pan[sy][sx] == -1:
                 see_pan[sy][sx] = 1
-                if [sy, sx] in m_list:
+                if [sx, sy] in m_list:
                     cnt+=1
                     see_pan[sy][sx] = 2
                     junsa_dol.append([sx, sy])
@@ -190,7 +191,7 @@ def see(mx, my, d):
             # print("옆1", sxx, syy)
             if -1 < sxx < N and -1 < syy < N and not see_pan[syy][sxx] == -1:
                 see_pan[syy][sxx] = 1
-                if [syy, sxx] in m_list:
+                if [sxx, syy] in m_list:
                     cnt += 1
                     see_pan[syy][sxx] = 2
                     junsa_dol.append([sxx, syy])
@@ -204,7 +205,7 @@ def see(mx, my, d):
             # print("옆2", sxx, syy)
             if -1 < sxx < N and -1 < syy < N and not see_pan[syy][sxx] == -1:
                 see_pan[syy][sxx] = 1
-                if [syy, sxx] in m_list:
+                if [sxx, syy] in m_list:
                     cnt += 1
                     see_pan[syy][sxx] = 2
                     junsa_dol.append([sxx, syy])
@@ -248,27 +249,43 @@ def move_junsa(x, y, see_sun):
     min_y = y
     min_d = abs(x-mx)+abs(y-my)
 
-    for _ in range(2):
-        for i in range(4):
-            nx = x + dx[i]
-            ny = y + dy[i]
 
-            if -1<nx<N and -1<ny<N and not (see_sun[ny][nx]==1 or see_sun[ny][nx]==2):
-                d = abs(nx-mx)+abs(ny-my)
-                if d<min_d:
-                    move_n+=1
-                    min_x = nx
-                    min_y = ny
-                    min_d = d
-        x = min_x
-        y = min_y
+    for i in [0, 1, 2, 3]:
+        nx = x + dx[i]
+        ny = y + dy[i]
+
+        if -1<nx<N and -1<ny<N and not (see_sun[ny][nx]==1 or see_sun[ny][nx]==2):
+            d = abs(nx-mx)+abs(ny-my)
+            if d<min_d:
+                move_n+=1
+                min_x = nx
+                min_y = ny
+                min_d = d
+    x = min_x
+    y = min_y
 
 
-    if min_d == 0:
-        return 1,  move_n, [min_y, min_x]
+    for i in [2, 3, 0, 1]:
+        nx = x + dx[i]
+        ny = y + dy[i]
+
+        if -1 < nx < N and -1 < ny < N and not (see_sun[ny][nx] == 1 or see_sun[ny][nx] == 2):
+            d = abs(nx - mx) + abs(ny - my)
+            if d < min_d:
+                move_n += 1
+                min_x = nx
+                min_y = ny
+                min_d = d
+    x = min_x
+    y = min_y
+
+
+    if min_x == mx and min_y == my:
+        # print("전사 이동:", [min_x, min_y], "움직임수:", move_n, "메두사위치: ", mx, my, "메두사 공격여뷰", 0, "메두사에서 거리", min_d)
+        return 1,  move_n, [min_x, min_y]
     else:
-
-        return 0, move_n, [min_y, min_x]
+        # print("전사 이동:", [min_x, min_y], "움직임수:", move_n, "메두사위치: ", mx, my, "메두사 공격여뷰", 1, "메두사에서 거리", min_d)
+        return 0, move_n, [min_x,min_y]
 
 
 
@@ -280,12 +297,12 @@ def move_All_junsa(dol, see_sun):
 
     # print("최종 시선", )
     global m_list
-    for y, x in m_list:
+    for x, y in m_list:
         if not [x, y] in dol:
             # print("이동할 전사:", x, y)
-            a, m, tmpl = move_junsa(x, y,see_sun)
-            # print("전사 이동:", tmpl, "움직임수:", a, "메두사위치: ", mx, my, "메두사 공격여뷰", a)
-            move_n+=m
+            a, n, tmpl = move_junsa(x, y,see_sun)
+
+            move_n+=n
             atec_n+=a
 
             if a==0:
@@ -294,7 +311,7 @@ def move_All_junsa(dol, see_sun):
 
         else:
             # print("돌되서 못움직인 전사 전사:", x, y)
-            new_m_list.append([y, x])
+            new_m_list.append([x,y])
             # print("전사추가", new_m_list)
 
     # print("최종전사", new_m_list)
@@ -308,7 +325,8 @@ tmp = list(map(int, input().split()))
 
 m_list = []
 for i in range(M):
-    m_list.append(tmp[i*2: i*2+2]) #y, x 순
+    # m_list.append(tmp[i*2: i*2+2]) #y, x 순
+    m_list.append([tmp[i*2+1], tmp[i*2]])
 
 pan = [list(map(int, input().split())) for _ in range(N)]
 visit = [[0 for _ in range(N)] for _ in range(N)]
@@ -347,17 +365,31 @@ for mx, my in path:
 
     nuw_m = []
     for i in range(len(m_list)):
-        ay, ax = m_list[i]
+        ax, ay = m_list[i]
         if not (mx==ax and my ==ay):
-            nuw_m.append([ay, ax])
+            nuw_m.append([ax,ay])
     m_list = nuw_m[:]
     # print("메두사 욺직이고 최종 전사")
     # print(m_list)
+
 
     #메두사 회전 하며서 돌로 만들수 있는 거 확인
     dol_n, dol, see_sun = see_all(mx, my)
     # print("돌된 매두사 개수랑 배열: ",dol_n, dol)
     ans_dol+=dol_n
+
+    # print("메두사와 전사 위치")
+    # for y in range(N):
+    #     for x in range(N):
+    #         if y == my and x == mx:
+    #             print(3, end=" ")
+    #         elif [x, y] in m_list:
+    #             print(2, end=" ")
+    #         elif see_sun[y][x] == 1:
+    #             print(1, end=" ")
+    #         else:
+    #             print(0, end=" ")
+    #     print()
 
     #전시 욺직이기,
     # print('총전사', m_list)
