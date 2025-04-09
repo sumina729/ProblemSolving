@@ -175,8 +175,10 @@ def see(mx, my, d):
             if not see_pan[sy][sx] == -1:
                 see_pan[sy][sx] = 1
                 if [sx, sy] in m_list:
-                    cnt+=1
-                    see_pan[sy][sx] = 2
+                    chog = m_list.count([sx, sy])
+                    cnt+=chog
+                    for _ in range(chog):
+                        see_pan[sy][sx] = 2
                     junsa_dol.append([sx, sy])
                     junsa_check(sx, sy, d, see_pan)
                     # see_pan[sy][sx] = 2
@@ -192,9 +194,11 @@ def see(mx, my, d):
             if -1 < sxx < N and -1 < syy < N and not see_pan[syy][sxx] == -1:
                 see_pan[syy][sxx] = 1
                 if [sxx, syy] in m_list:
-                    cnt += 1
+                    chog = m_list.count([sxx, syy])
+                    cnt += chog
                     see_pan[syy][sxx] = 2
-                    junsa_dol.append([sxx, syy])
+                    for _ in range(chog):
+                        junsa_dol.append([sxx, syy])
                     # print("메두사1", sxx, syy)
                     junsa_check(sxx,syy, d, see_pan)
                     # see_pan[syy][sxx] = 2
@@ -206,9 +210,11 @@ def see(mx, my, d):
             if -1 < sxx < N and -1 < syy < N and not see_pan[syy][sxx] == -1:
                 see_pan[syy][sxx] = 1
                 if [sxx, syy] in m_list:
-                    cnt += 1
+                    chog = m_list.count([sxx, syy])
+                    cnt += chog
                     see_pan[syy][sxx] = 2
-                    junsa_dol.append([sxx, syy])
+                    for _ in range(chog):
+                        junsa_dol.append([sxx, syy])
                     # print("메두사1", sxx, syy)
                     junsa_check(sxx,syy, d, see_pan)
 
@@ -347,23 +353,23 @@ path = bfs(mx, my)
 if path == -1:
     print("-1")
 else:
-    
+
     # print("공원가는 경로")
     # print(len(path), path)
-    
+
     for mx, my in path:
-    
+
         # print()
         # print()
         # print("턴 시작", mx, my)
-    
+
         if mx == ex and my == ey:
             print(0)
             break
         ans_move = 0
         ans_dol = 0
         ans_atec = 0
-    
+
         nuw_m = []
         for i in range(len(m_list)):
             ax, ay = m_list[i]
@@ -372,13 +378,13 @@ else:
         m_list = nuw_m[:]
         # print("메두사 욺직이고 최종 전사")
         # print(m_list)
-    
-    
+
+
         #메두사 회전 하며서 돌로 만들수 있는 거 확인
         dol_n, dol, see_sun = see_all(mx, my)
         # print("돌된 매두사 개수랑 배열: ",dol_n, dol)
         ans_dol+=dol_n
-    
+
         # print("메두사와 전사 위치")
         # for y in range(N):
         #     for x in range(N):
@@ -391,14 +397,14 @@ else:
         #         else:
         #             print(0, end=" ")
         #     print()
-    
+
         #전시 욺직이기,
         # print('총전사', m_list)
         m_list, m, a = move_All_junsa(dol, see_sun) #new_m_list, move_n, atec_n
         # print("최최종 저사", m_list)
         ans_move+=m
         ans_atec+=a
-    
+
         # print("================답")
         # print("욺직인 전사수:", ans_move)
         # print("돌이 된 전사수:", ans_dol)
@@ -406,5 +412,5 @@ else:
         # print("================")
         print(ans_move, ans_dol, ans_atec)
         # break
-    
+
     # dol_n, dol = see_all(2, 0) # 될된 수, 돌외 있는 전사 위치
