@@ -346,64 +346,65 @@ dol = [[]]
 path = bfs(mx, my)
 if path == -1:
     print("-1")
-
-# print("공원가는 경로")
-# print(len(path), path)
-
-for mx, my in path:
-
-    # print()
-    # print()
-    # print("턴 시작", mx, my)
-
-    if mx == ex and my == ey:
-        print(0)
-        break
-    ans_move = 0
-    ans_dol = 0
-    ans_atec = 0
-
-    nuw_m = []
-    for i in range(len(m_list)):
-        ax, ay = m_list[i]
-        if not (mx==ax and my ==ay):
-            nuw_m.append([ax,ay])
-    m_list = nuw_m[:]
-    # print("메두사 욺직이고 최종 전사")
-    # print(m_list)
-
-
-    #메두사 회전 하며서 돌로 만들수 있는 거 확인
-    dol_n, dol, see_sun = see_all(mx, my)
-    # print("돌된 매두사 개수랑 배열: ",dol_n, dol)
-    ans_dol+=dol_n
-
-    # print("메두사와 전사 위치")
-    # for y in range(N):
-    #     for x in range(N):
-    #         if y == my and x == mx:
-    #             print(3, end=" ")
-    #         elif [x, y] in m_list:
-    #             print(2, end=" ")
-    #         elif see_sun[y][x] == 1:
-    #             print(1, end=" ")
-    #         else:
-    #             print(0, end=" ")
-    #     print()
-
-    #전시 욺직이기,
-    # print('총전사', m_list)
-    m_list, m, a = move_All_junsa(dol, see_sun) #new_m_list, move_n, atec_n
-    # print("최최종 저사", m_list)
-    ans_move+=m
-    ans_atec+=a
-
-    # print("================답")
-    # print("욺직인 전사수:", ans_move)
-    # print("돌이 된 전사수:", ans_dol)
-    # print("메두사를 공격한 전사수:", ans_atec)
-    # print("================")
-    print(ans_move, ans_dol, ans_atec)
-    # break
-
-# dol_n, dol = see_all(2, 0) # 될된 수, 돌외 있는 전사 위치
+else:
+    
+    # print("공원가는 경로")
+    # print(len(path), path)
+    
+    for mx, my in path:
+    
+        # print()
+        # print()
+        # print("턴 시작", mx, my)
+    
+        if mx == ex and my == ey:
+            print(0)
+            break
+        ans_move = 0
+        ans_dol = 0
+        ans_atec = 0
+    
+        nuw_m = []
+        for i in range(len(m_list)):
+            ax, ay = m_list[i]
+            if not (mx==ax and my ==ay):
+                nuw_m.append([ax,ay])
+        m_list = nuw_m[:]
+        # print("메두사 욺직이고 최종 전사")
+        # print(m_list)
+    
+    
+        #메두사 회전 하며서 돌로 만들수 있는 거 확인
+        dol_n, dol, see_sun = see_all(mx, my)
+        # print("돌된 매두사 개수랑 배열: ",dol_n, dol)
+        ans_dol+=dol_n
+    
+        # print("메두사와 전사 위치")
+        # for y in range(N):
+        #     for x in range(N):
+        #         if y == my and x == mx:
+        #             print(3, end=" ")
+        #         elif [x, y] in m_list:
+        #             print(2, end=" ")
+        #         elif see_sun[y][x] == 1:
+        #             print(1, end=" ")
+        #         else:
+        #             print(0, end=" ")
+        #     print()
+    
+        #전시 욺직이기,
+        # print('총전사', m_list)
+        m_list, m, a = move_All_junsa(dol, see_sun) #new_m_list, move_n, atec_n
+        # print("최최종 저사", m_list)
+        ans_move+=m
+        ans_atec+=a
+    
+        # print("================답")
+        # print("욺직인 전사수:", ans_move)
+        # print("돌이 된 전사수:", ans_dol)
+        # print("메두사를 공격한 전사수:", ans_atec)
+        # print("================")
+        print(ans_move, ans_dol, ans_atec)
+        # break
+    
+    # dol_n, dol = see_all(2, 0) # 될된 수, 돌외 있는 전사 위치
