@@ -69,7 +69,7 @@ def time_check(visited, gumong, turm):
             nx = tx + dx[td]
             ny = ty + dy[td]
 
-            if -1<nx<N and -1<ny<N and (pan[ny][nx] == 0 or pan[ny][nx] == 4):
+            if -1<nx<N and -1<ny<N and (pan[ny][nx] == 0):
                 visited[5][ny][nx] = -2
                 new_gumong.append([nx, ny, td, tv]) # 갱신되면 새롭개
             else:
@@ -190,7 +190,4 @@ sx, sy = start_xy(buk[4], 2)
 
 #탐색하기
 ans = bfs(4, sx, sy)
-if ans ==  -1:
-    print(-1)
-else:
-    print(ans)
+print(ans)
