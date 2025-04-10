@@ -1,18 +1,18 @@
 from collections import deque
 
-def start_xy(pan, n):
+#위 오 아래 왼
+dx = [0, 1, 0, -1]
+dy = [-1, 0, 1, 0]
 
+def start_xy(pan, n):
     global L
 
     for y in range(L):
         for x in range(L):
             if pan[y][x] == n:
                 return x, y
-#위 오 아래 왼
-dx = [0, 1, 0, -1]
-dy = [-1, 0, 1, 0]
-def bfs(x, y, gisa_num, d):
 
+def bfs(x, y, gisa_num, d):
     '''
         1. d 방향이면 방패면 갈수 있음.방문처리
         2. 방패 아닌데 d 방향에 하나라도 벽이 있는지 체크
@@ -45,19 +45,19 @@ def bfs(x, y, gisa_num, d):
                     que.append((nx, ny, gisa_pan[ny][nx]))
                     visited[ny][nx] = 1
                 elif not (-1<nx<L and -1<ny<L) or pan[ny][nx] == 2: #벽이면
-                    is_go = 0
-            else: #다른 방향이머 가기꺼만
+                    # is_go = 0
+                    return -1
+            else: #다른 방향이면 자기 방패만
                 if -1<nx<L and -1<ny<L and gisa_pan[ny][nx] == gisa_num and visited[ny][nx] == 0: # 즉 범위내에있는 방패들이면
                     que.append((nx, ny, gisa_pan[ny][nx]))
                     visited[ny][nx] = 1
 
 
-    if is_go == 0:
-        return -1
-    else:
-        return go_list
-
-
+    # if is_go == 0:
+    #     return -1
+    # else:
+    #     return go_list
+    return go_list
 
 def move_gosa(gisa_num, d):
     global gisa_pan
@@ -87,7 +87,6 @@ def attack_gisa(gisa_pan, move_gisa_list, pan, gisa_k):
             for x in range(L):
                 if gisa_pan[y][x] == i and pan[y][x] == 1: #체크할 기사이면서, 함정이면
                     gisa_k[i] = max(0, gisa_k[i]-1)
-
 
 #죽은 전사 지우는 함수
 def remove_junsa(gisa_pan, i):
@@ -132,7 +131,7 @@ for gisa_i, d in king_mlist:
     move_gisa_list.remove(gisa_i) #명령 받은 전사는 빼기
     attack_gisa(gisa_pan, move_gisa_list, pan, gisa_k)
 
-    # 목숨 0 인거 지우기
+    # 목숨 0 인거 전사 판에서 지우기
     for i in range(len(gisa_k)):
         if gisa_k[i] == 0:
             remove_junsa(gisa_pan, i)
