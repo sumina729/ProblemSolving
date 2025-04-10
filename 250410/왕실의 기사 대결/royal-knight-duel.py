@@ -1,8 +1,4 @@
-
-
 from collections import deque
-from os import remove
-
 
 def start_xy(pan, n):
 
@@ -56,12 +52,6 @@ def bfs(x, y, gisa_num, d):
                     visited[ny][nx] = 1
 
 
-
-    # for y in visited:
-    #     print(y)
-    # print("1이면 움직임, 0이면 못움직임: ", is_go)
-
-
     if is_go == 0:
         return -1
     else:
@@ -69,23 +59,17 @@ def bfs(x, y, gisa_num, d):
 
 
 
-
 def move_gosa(gisa_num, d):
     global gisa_pan
-    move_gisa_list = set() #한번에 움직일 기사들
-
 
     sx, sy = start_xy(gisa_pan, gisa_num)
-    # print(gisa_num,"번 위치", sx, sy)
+    move_gisa_list = bfs(sx, sy, gisa_num, d) #한번에 움직일 기사들 리스트 반환 # 셋
 
-    move_gisa_list = bfs(sx, sy, gisa_num, d)
-
+    #이동 못함
     if move_gisa_list == -1:
-        # print("이동 못함")
         return gisa_pan, -1
 
     new_gisa_pan = [[-1 for _ in range(L)] for _ in range(L)]
-    # print("이동할 전사들", move_gisa_list)
     for y in range(L):
         for x in range(L):
             if gisa_pan[y][x] in move_gisa_list:
@@ -94,31 +78,23 @@ def move_gosa(gisa_num, d):
             elif gisa_pan[y][x] > -1:
                 new_gisa_pan[y][x]= gisa_pan[y][x]
 
-    # print("기사이동")
-    # for y in new_gisa_pan:
-    #     print(y)
     return new_gisa_pan, move_gisa_list
 
+#함정에 빠진 전사 체크하기
 def attack_gisa(gisa_pan, move_gisa_list, pan, gisa_k):
-    # attack_num = 0
     for i in move_gisa_list:
-        # print("공격당할 전사 번호:", i)
         for y in range(L):
             for x in range(L):
                 if gisa_pan[y][x] == i and pan[y][x] == 1: #체크할 기사이면서, 함정이면
                     gisa_k[i] = max(0, gisa_k[i]-1)
-                    # attack_num+=1
 
-    # print("공경당한 전사와 회수", move_gisa_list, attack_num)
 
-    # return attack_num
-
+#죽은 전사 지우는 함수
 def remove_junsa(gisa_pan, i):
     for y in range(L):
         for x in range(L):
             if gisa_pan[y][x] == i:
                 gisa_pan[y][x] = -1
-
 
 
 
@@ -146,25 +122,15 @@ for gisa_i, d in king_mlist:
     if gisa_k[gisa_i] < 1: #죽은 기사이면 넘어감
         continue
 
-    # print("함정, 벽 위치")
-    # for y in pan:
-    #     print(y)
-    #
-    # print("기사위치")
-    # for y in gisa_pan:
-    #     print(y)
-
+    #전사이동
     gisa_pan, move_gisa_list = move_gosa(gisa_i, d)
-    # gisa_pan, move_gisa_list = move_gosa(1, 1)
     if move_gisa_list == -1:
-        # print("이동 못함 턴 다시 처음부터")
+        # 이동 못함 턴 다시 처음부터
         continue
 
-    move_gisa_list.remove(gisa_i)
-    # move_gisa_list.remove(1)
-    #움직인 전사에 대해서 함정 체크
+    # 움직인 전사에 대해서 함정 체크
+    move_gisa_list.remove(gisa_i) #명령 받은 전사는 빼기
     attack_gisa(gisa_pan, move_gisa_list, pan, gisa_k)
-    # print("목숨", gisa_k)
 
     # 목숨 0 인거 지우기
     for i in range(len(gisa_k)):
@@ -172,14 +138,10 @@ for gisa_i, d in king_mlist:
             remove_junsa(gisa_pan, i)
 
 
-
-    # break
-# print(first_gisa_k)
+#살아있는 전사들 수와 비교하기
 ans = 0
 for i in range(len(gisa_k)):
     if gisa_k[i] > 0:
         ans += first_gisa_k[i] - gisa_k[i]
 
 print(ans)
-
-
