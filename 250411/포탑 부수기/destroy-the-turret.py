@@ -197,7 +197,6 @@ potop_pan_go_num = [[0 for _ in range(M)] for _ in range(N)]
 
 for k in range(K):
     if potop_pan_cnt(potop_pan) == 1:
-        print(max_potop())
         # print("1개 이므로 즉시 종료")
         break
 
