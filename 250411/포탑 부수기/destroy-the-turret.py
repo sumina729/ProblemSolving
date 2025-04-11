@@ -1,13 +1,11 @@
+# import sys
+# sys.stdin = open("input.txt", "r")
 
-import sys
 from collections import deque
 
-sys.stdin = open("input.txt", "r")
-
-
+#남아있는 포탑 구하는 함수
 def potop_pan_cnt(potop_pan):
     cnt = 0
-
     for y in range(N):
         for x in range(M):
             if potop_pan[y][x] > 0:
@@ -15,6 +13,7 @@ def potop_pan_cnt(potop_pan):
     # print("남은 포탑 수: ",cnt)
     return cnt
 
+#공경포탑, 공경받는포탑 구하는 함수
 def search_attack(potop_pan, potop_pan_go_num, chek):
     global N, M, K
     if chek == 0:
@@ -55,7 +54,7 @@ def search_attack(potop_pan, potop_pan_go_num, chek):
 
     return m_x, m_y
 
-
+#공격경로 구하는 함수
 def bfs(sx, sy, ex, ey):
     #우하좌상, 포탑이 0보다 큰곳, 방문 안한곳, 벽끼리 이어져있음
     global N, M, potop_pan
@@ -63,7 +62,6 @@ def bfs(sx, sy, ex, ey):
     dy = [0, 1, 0, -1]
 
     # 우하좌상
-
     visited = [[0 for _ in range(M)] for _ in range(N)]
     prve = [[[] for _ in range(M)] for _ in range(N)]
     peth = []
@@ -85,11 +83,6 @@ def bfs(sx, sy, ex, ey):
                 que.append((nx, ny))
                 visited[ny][nx] = visited[y][x]+1
                 prve[ny][nx] = [x, y]
-
-    # print("bfs 경로")
-    # for y in visited:
-    #     print(y)
-
     #경로 없으면 리턴
     if visited[ey][ex] == 0:
         return -1
@@ -102,11 +95,10 @@ def bfs(sx, sy, ex, ey):
         peth.append((ex, ey))
 
     peth = peth[::-1]
-    # print(peth)
 
     return peth
 
-
+#레이저 공격 함수
 def reiser_att(sx, sy, ex, ey, path):
     global N, M, potop_pan
     att_list = set()
@@ -121,12 +113,9 @@ def reiser_att(sx, sy, ex, ey, path):
 
         att_list.add((nx, ny))
 
-    # print(att_list)
-    # for y in potop_pan:
-    #     print(y)
-
     return att_list
 
+#포탄공격 함수
 def potop_att(sx, sy, ex, ey):
     global N, M, potop_pan
     dx = [1, 0, -1, 0, -1, 1, -1, 1]
@@ -147,39 +136,31 @@ def potop_att(sx, sy, ex, ey):
             potop_pan[ny][nx] = potop_pan[ny][nx] - a // 2
             att_list.add((nx, ny))
 
-    # print(att_list)
-    # for y in potop_pan:
-    #     print(y)
-
     return att_list
 
-
-
+#공격 함수
 def potop_attack(s_x, s_y, e_x, e_y):
-    #1. 레이저 공격
+    #레이저 공격 가능한지 체크
     path = bfs(s_x, s_y, e_x, e_y)
-    if path == -1: #2. 포탑 공격
+    if path == -1:
+        #2. 포탑 공격
         att_list = potop_att(s_x, s_y, e_x, e_y)
     else:
+        #1레이저 공격
         att_list = reiser_att(s_x, s_y, e_x, e_y, path)
 
     return att_list
 
-
+#탑정비, 공력력 추가해주는 함수
 def add_gonguk(att_list, sx, sy):
     global N, M, potop_pan
-
 
     for y in range(N):
         for x in range(M):
             if not (y == sy and x == sx) and not (x, y) in att_list and potop_pan[y][x] > 0:
                 potop_pan[y][x] = potop_pan[y][x]+1
 
-    # print("포탑 정비")
-    # print(att_list)
-    # for y in potop_pan:
-    #     print(y)
-
+#탑 최대 갯수 구하는 함수
 def max_potop():
     global N, M, potop_pan
     ans = 0
@@ -197,13 +178,11 @@ potop_pan_go_num = [[0 for _ in range(M)] for _ in range(N)]
 
 for k in range(K):
     if potop_pan_cnt(potop_pan) == 1:
-        # print("1개 이므로 즉시 종료")
+        # 1개 이므로 즉시 종료
         break
 
     s_x, s_y  = search_attack(potop_pan, potop_pan_go_num, 0) #공격포탑 찾기
     e_x, e_y = search_attack(potop_pan, potop_pan_go_num, 1) #공격당할 포탑 찾기
-    # print("공격 포탑:", s_x, s_y)
-    # print("공격 받는 포탑:", e_x, e_y)
 
     #공격자에게 공경력 추가
     potop_pan[s_y][s_x] = potop_pan[s_y][s_x]+N+M
@@ -217,14 +196,4 @@ for k in range(K):
     #공격날 갱신
     potop_pan_go_num[s_y][s_x] = k+1 #k번쨰 턴에 공격함
 
-    # print("===============한턴 끝 최종 포탑 및 공격날==========")
-    # for y in potop_pan:
-    #     print(y)
-    # print()
-    # for y in potop_pan_go_num:
-    #     print(y)
-    # print("=====================================")
-
 print(max_potop())
-
-
