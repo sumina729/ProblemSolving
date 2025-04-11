@@ -37,7 +37,7 @@ def search_attack(potop_pan, potop_pan_go_num, chek):
             tmp_xy = x+y
             tmp_x = x
 
-            if not n == 0:
+            if n > 0:
                 if chek == 0:
                     if m_n > n or (m_n == n and m_gn < gn) or (m_n == n and m_gn == gn and m_xy < tmp_xy) or (m_n == n and m_gn == gn and m_xy == tmp_xy and m_x < tmp_x): #공격이 작으면
                         m_n = n
