@@ -18,7 +18,7 @@ def potop_pan_cnt(potop_pan):
 def search_attack(potop_pan, potop_pan_go_num, chek):
     global N, M, K
     if chek == 0:
-        m_n = 1001
+        m_n = 5001
         m_gn = -1
         m_xy = -1
         m_x = -1
