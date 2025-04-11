@@ -1,7 +1,8 @@
 '''
 pm 4:00: 문제풀이 시작
 pm 4:51: 코드 시작
-pm 7:08: 코드 다짬, 제출 : 시간초과남..
+pm 7:08: 코드 다짬.
+시간초과, 사람 0명 체크 하는 위치 틀림
 '''
 
 import sys
@@ -121,14 +122,16 @@ def rotate_man_exit(sx, sy, r):
 
 def rotate_pan(sx, sy, r):
     global N, pan
-    tmp_pan = [[pan[y][x] for x in range(N)] for y in range(N)]
+    tmp_pan = [[0 for _ in range(r)] for _ in range(r)]
 
     for y in range(r):
         for x in range(r):
             # print(sy+x, sx+(r-y-1))
-            tmp_pan[sy+x][sx+(r-y-1)] = pan[sy+y][sx+x]
+            tmp_pan[x][r-y-1] = pan[sy+y][sx+x]
 
-    return tmp_pan
+    for y in range(r):
+        for x in range(r):
+            pan[sy+y][sx+x] = tmp_pan[y][x]
 
 def remove_buk(sx, sy, r):
     for y in range(sy, sy+r):
@@ -150,11 +153,13 @@ exit_x -=1
 ans = 0
 
 for _ in range(K): #K번 진행
-    if len(man_list) == 0:
-        # print("사람들 모두 출구로 빠져나감")
-        break
+    # if len(man_list) == 0:
+    #     break
 
     man_list = move_man() #사람 이동 시키기
+
+    if len(man_list) == 0:
+        break
     sx, sy, r = make_rect()
     # print("최종 결정 사각형: ", sx, sy, r)
 
@@ -162,7 +167,7 @@ for _ in range(K): #K번 진행
     # print("출구이동", exit_x, exit_y)
     # print("사람이동", man_list)
 
-    pan = rotate_pan(sx, sy, r)
+    rotate_pan(sx, sy, r)
     # print("판회전")
     # for y in pan:
     #     print(y)
