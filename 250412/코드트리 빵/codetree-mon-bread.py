@@ -3,8 +3,9 @@ sys.stdin = open("input.txt","r")
 
 from collections import deque
 
-# def get_dist(x1, y1, x2, y2):
-#     return abs(x1-x2) + abs(y1-y2)
+#상좌우하
+dx = [0, -1, 1, 0]
+dy = [-1, 0, 0, 1]
 
 def get_dist(x1, y1, x2, y2):
     global pan, N
@@ -30,7 +31,6 @@ def get_dist(x1, y1, x2, y2):
         return dist
     else:
         return N*N
-
 
 def go_basecamp(man_i):
     global N, pan, want_store_list
@@ -62,9 +62,6 @@ def go_basecamp(man_i):
     pan[min_y][min_x] = 2 #베이스 캠프 더이상 못감
     pan_man[man_i] = [min_x, min_y] #사람 초기 위치
 
-#상좌우하
-dx = [0, -1, 1, 0]
-dy = [-1, 0, 0, 1]
 def move_man(man_i):
     global N, pan_man, want_store_list, pan
     min_dist = N + N
@@ -85,9 +82,6 @@ def move_man(man_i):
     go_x = sx+dx[di]
     go_y = sy+dy[di]
     pan_man[man_i] = [go_x, go_y]
-    # print(man_i, "번 사람 ", pan_man[man_i], "로 이동")
-
-
 
     return go_x, go_y
 
@@ -109,7 +103,6 @@ def move_all_man():
         pan[y][x] = 2
 
 
-
 N, M = map(int, input().split()) #판크기, 사람수
 pan = [list(map(int, input().split())) for _ in range(N)] # 막힌 부분은 2, 1 배이스 캠프
 want_store_list = []
@@ -123,45 +116,12 @@ pan_man_i_list = [] #현재 판에 있는 사람 넘버
 turn = -1
 while True:
     turn +=1 #0턴 부터 시작
-    # print(turn + 1, " 턴 시작", pan_man_i_list)
     move_all_man()
 
-
     if turn < M:
-        # 3이동
+        #이동
         pan_man_i_list.append(turn)
         go_basecamp(turn)
-        # print(turn, "의 초기 위치", pan_man[turn])
-
-    # print("판에 있는 사람 번호등", pan_man_i_list)
-    # print("판에 있는 사람 편의점", want_store_list)
-    # for y in range(N):
-    #     for x in range(N):
-    #         is_c = 1
-    #         for i in range(M):
-    #             if want_store_list[i][0] == x and want_store_list[i][1] == y:
-    #                 is_c = 0
-    #                 print(i, end=" ")
-    #
-    #         if is_c:
-    #             print("-", end=" ")
-    #     print()
-    # print("판에 있는 사람 위치득", pan_man)
-    # for y in range(N):
-    #     for x in range(N):
-    #         is_c = 1
-    #         for i in range(M):
-    #             if pan_man[i][0] == x and pan_man[i][1] == y:
-    #                 is_c = 0
-    #                 print(i, end=" ")
-    #
-    #         if is_c:
-    #             print("-", end=" ")
-    #     print()
-
-    # for y in pan:
-    #     print(y)
-    # print()
 
     if turn >= M and len(pan_man_i_list) == 0:
         print(turn+1)
