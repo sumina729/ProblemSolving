@@ -40,11 +40,14 @@ def sang_ho(santa_n, cx, cy, d_i):
     N, santa_nxy, tarak_santa_n
     n = santa_n
 
+    # print(santa_n, "번 싼타 밀쳐짐", d_i)
     for i in range(P):
         sx, sy = santa_nxy[i]
         if not n == i and cx == sx and cy == sy: #자기자신이 아닌 다른게 들어가 있으면
+            # print(i, "번 그자리에 있음")
             nx = santa_nxy[i][0] +dx[d_i]
             ny = santa_nxy[i][1] +dy[d_i]
+            # print(i, "번 ", nx, ny, "로 밀림")
 
             if -1 < nx < N and -1 < ny < N:
                 santa_nxy[i][0] = nx
@@ -52,10 +55,10 @@ def sang_ho(santa_n, cx, cy, d_i):
                 # 상호작용
                 sang_ho(i, nx, ny, d_i)
             else:
-                # print(santa_n, "번 싼타 탈락")
-                santa_nxy[santa_n][0] = -1
-                santa_nxy[santa_n][1] = -1
-                tarak_santa_n.add(santa_n)
+                # print(i, "번 싼타 탈락")
+                santa_nxy[i][0] = -1
+                santa_nxy[i][1] = -1
+                tarak_santa_n.add(i)
             break
 
 
@@ -83,6 +86,7 @@ def dump(santa_n, d_i, jumsu):
     else:
         #탈락
         # print(santa_n, "번 싼타 탈락")
+        # print(santa_n, "번 싼타 밀쳐텨 탈락")
         santa_nxy[santa_n][0] = -1
         santa_nxy[santa_n][1] = -1
         gijul_santa[santa_n] = 0
@@ -125,7 +129,7 @@ def move_rudolpu():
 
     #만약 산타 밀쳐지기
     if ry == santa_y and rx == santa_x:
-        # print("밀치자")
+        # print(santa_n, "번 싼타 밀쳐짐")
         dump(santa_n, d_i, C)
 
 def is_no_snata(santa_n, nx, ny):
@@ -220,15 +224,19 @@ for m in range(M):
     # print("산타위치: ", santa_nxy)
     # print("산타기절: ", gijul_santa)
     # print("산타탈락: ", tarak_santa_n)
+    if len(tarak_santa_n) == P:
+        break
 
     # for y in range(N):
     #     for x in range(N):
     #         if [x,y] in santa_nxy:
-    #             print("2", end=" ")
+    #             for i in range(P):
+    #                 if santa_nxy[i][0] == x and santa_nxy[i][1] == y:
+    #                     print(i, end=" ")
     #         elif rx == x and ry==y:
-    #             print("1", end=" ")
+    #             print("R", end=" ")
     #         else:
-    #             print("0", end=" ")
+    #             print("-", end=" ")
     #     print()
 
     for i in range(P):
@@ -245,12 +253,15 @@ for m in range(M):
 
     # for y in range(N):
     #     for x in range(N):
-    #         if [x,y] in santa_nxy:
-    #             print("2", end=" ")
+    #         if [x, y] in santa_nxy:
+    #             for i in range(P):
+    #                 if santa_nxy[i][0] == x and santa_nxy[i][1] == y:
+    #                     print(i, end=" ")
     #         elif rx == x and ry==y:
-    #             print("1", end=" ")
+    #             print("R", end=" ")
     #         else:
-    #             print("0", end=" ")
+    #             print("-", end=" ")
+    #
     #     print()
 
     # print("==산타 이동후 산타 상태==")
@@ -263,17 +274,21 @@ for m in range(M):
 
     # for y in range(N):
     #     for x in range(N):
-    #         if [x,y] in santa_nxy:
-    #             print("2", end=" ")
+    #         if [x, y] in santa_nxy:
+    #             for i in range(P):
+    #                 if santa_nxy[i][0] == x and santa_nxy[i][1] == y:
+    #                     print(i, end=" ")
     #         elif rx == x and ry==y:
-    #             print("1", end=" ")
+    #             print("R", end=" ")
     #         else:
-    #             print("0", end=" ")
+    #             print("-", end=" ")
     #     print()
 
     for i in range(P):
         if not i in tarak_santa_n:
             santa_jumsu[i]+=1
+
+    # print(santa_jumsu)
 
 print(*santa_jumsu)
 
