@@ -48,7 +48,7 @@ def sang_ho(santa_n, cx, cy, d_i):
             else: #밀쳐지고 범위내에 없으면  타락
                 santa_nxy[i][0] = -1
                 santa_nxy[i][1] = -1
-                gijul_santa[santa_n] = 0
+                gijul_santa[i] = 0
                 tarak_santa_n.add(i)
 
             break #1개 밖에 없으니깐 한번 찾으면 즉시 종룍
