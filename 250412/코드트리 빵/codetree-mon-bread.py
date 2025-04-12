@@ -1,9 +1,36 @@
 import sys
 sys.stdin = open("input.txt","r")
 
+from collections import deque
+
+# def get_dist(x1, y1, x2, y2):
+#     return abs(x1-x2) + abs(y1-y2)
 
 def get_dist(x1, y1, x2, y2):
-    return abs(x1-x2) + abs(y1-y2)
+    global pan, N
+    visit = [[0 for _ in range(N)] for _ in range(N)]
+
+    que = deque()
+    que.append((x1, y1))
+    visit[y1][x1] = 1
+
+    while que:
+        x, y = que.popleft()
+        for i in range(4):
+            nx = x + dx[i]
+            ny = y + dy[i]
+
+            if -1<nx<N and -1<ny<N and not pan[ny][nx] ==2 and visit[ny][nx] == 0:
+                que.append((nx, ny))
+                visit[ny][nx] = visit[y][x]+1
+
+    dist = visit[y2][x2]
+    # print(dist)
+    if not dist == 0:
+        return dist
+    else:
+        return N*N
+
 
 def go_basecamp(man_i):
     global N, pan, want_store_list
@@ -12,6 +39,7 @@ def go_basecamp(man_i):
     min_y = -1
     min_x = -1
     #가장 가까운 베이스 캠프 챁기
+
     for y in range(N):
         for x in range(N):
             if pan[y][x] == 1: #못가는 베이으 캠프는 2
@@ -42,12 +70,12 @@ def move_man(man_i):
     min_dist = N + N
     di = -2
     sx, sy = pan_man[man_i][0], pan_man[man_i][1]
-
     for i in range(4):
         nx = sx+dx[i]
         ny = sy+dy[i]
 
         if -1<nx<N and -1<ny<N and not pan[ny][nx] ==2:
+
             dist = get_dist(nx, ny, want_store_list[man_i][0], want_store_list[man_i][1]) #원하는 편의점과의 거리
             if min_dist > dist:
                 min_dist = dist
@@ -106,16 +134,35 @@ while True:
         # print(turn, "의 초기 위치", pan_man[turn])
 
     # print("판에 있는 사람 번호등", pan_man_i_list)
+    # print("판에 있는 사람 편의점", want_store_list)
+    # for y in range(N):
+    #     for x in range(N):
+    #         is_c = 1
+    #         for i in range(M):
+    #             if want_store_list[i][0] == x and want_store_list[i][1] == y:
+    #                 is_c = 0
+    #                 print(i, end=" ")
+    #
+    #         if is_c:
+    #             print("-", end=" ")
+    #     print()
     # print("판에 있는 사람 위치득", pan_man)
+    # for y in range(N):
+    #     for x in range(N):
+    #         is_c = 1
+    #         for i in range(M):
+    #             if pan_man[i][0] == x and pan_man[i][1] == y:
+    #                 is_c = 0
+    #                 print(i, end=" ")
+    #
+    #         if is_c:
+    #             print("-", end=" ")
+    #     print()
+
     # for y in pan:
     #     print(y)
-    #
-    #
     # print()
 
     if turn >= M and len(pan_man_i_list) == 0:
         print(turn+1)
         break
-
-    # if turn == 7:
-    #     break
