@@ -53,11 +53,11 @@ def move_man(man_i):
                 min_dist = dist
                 di = i
 
-    if not di == -2:
-        go_x = sx+dx[di]
-        go_y = sy+dy[di]
-        pan_man[man_i] = [go_x, go_y]
-        # print(man_i, "번 사람 ", pan_man[man_i], "로 이동")
+    # if not di == -2:
+    go_x = sx+dx[di]
+    go_y = sy+dy[di]
+    pan_man[man_i] = [go_x, go_y]
+    # print(man_i, "번 사람 ", pan_man[man_i], "로 이동")
 
 
 
@@ -68,15 +68,16 @@ def move_all_man():
     dochak_list = []
 
     for i in pan_man_i_list:
+        # print(i, "번 이동 시작")
         go_x, go_y = move_man(i)
 
         # 간 곳이 편의점이면
         if go_x == want_store_list[i][0] and go_y == want_store_list[i][1]:
-            pan_man_i_list.remove(i) # 판에서 빼기
             dochak_list.append(i) # 도착에 넣게
 
     for i in dochak_list:
         x, y = pan_man[i][0], pan_man[i][1]
+        pan_man_i_list.remove(i)
         pan[y][x] = 2
 
 
@@ -94,7 +95,7 @@ pan_man_i_list = [] #현재 판에 있는 사람 넘버
 turn = -1
 while True:
     turn +=1 #0턴 부터 시작
-
+    # print(turn + 1, " 턴 시작", pan_man_i_list)
     move_all_man()
 
 
@@ -109,10 +110,11 @@ while True:
     # for y in pan:
     #     print(y)
     #
+    #
     # print()
 
-    if turn >= M-1 and len(pan_man_i_list) == 0:
-        print(turn)
+    if turn >= M and len(pan_man_i_list) == 0:
+        print(turn+1)
         break
 
     # if turn == 7:
