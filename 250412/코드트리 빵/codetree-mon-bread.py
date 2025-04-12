@@ -108,10 +108,10 @@ while True:
     # print("판에 있는 사람 위치득", pan_man)
     # for y in pan:
     #     print(y)
-
+    #
     # print()
 
-    if turn >= M and len(pan_man_i_list) == 0:
+    if turn >= M-1 and len(pan_man_i_list) == 0:
         print(turn)
         break
 
