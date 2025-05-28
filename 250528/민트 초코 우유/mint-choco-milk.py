@@ -1,34 +1,18 @@
 from collections import deque
 
 def cnt_kind(s):
-    if s == 'T' or  s == 'C' or  s == 'M':
-        return 1
-    elif s == 'TC' or  s == 'TM' or  s == 'CM':
-        return 2
-    elif s == 'TCM':
-        return 3
+    return len(set(s))
+
 
 def sort_depo(list):
     global kind_list, power_list, N
-    sort_power_list = []
-    tmp = list[:]
 
-    while tmp:
-        x, y = tmp[0]
-        min_k = cnt_kind(kind_list[y][x])
-        max_p = power_list[y][x]
-        min_y = y
-        min_x = x
-
-        for x, y in tmp:
-            if (min_k > cnt_kind(kind_list[y][x])) or (min_k == cnt_kind(kind_list[y][x]) and max_p < power_list[y][x]) or (min_k == cnt_kind(kind_list[y][x]) and max_p == power_list[y][x] and min_y > y) or (min_k == cnt_kind(kind_list[y][x]) and max_p == power_list[y][x] and min_y == y and min_x > x):
-                min_k = cnt_kind(kind_list[y][x])
-                max_p = power_list[y][x]
-                min_y = y
-                min_x = x
-
-        sort_power_list.append((min_x, min_y))
-        tmp.remove((min_x, min_y))    
+    sort_power_list = sorted(list, key=lambda xy: (
+        cnt_kind(kind_list[xy[1]][xy[0]]), 
+        -power_list[xy[1]][xy[0]], 
+        xy[1], 
+        xy[0]
+    ))   
 
     return sort_power_list
 
@@ -60,7 +44,7 @@ def bfs(x, y):
                 visited[ny][nx] = 1
                 group.append((nx, ny))
 
-                if (max_p < power_list[ny][nx]) or (max_p == power_list[ny][nx] and min_y > ny) or (max_p == power_list[ny][nx] and min_y == ny and min_x > nx):
+                if (-power_list[ny][nx], ny, nx) < (-max_p, min_y, min_x) :
                     max_p = power_list[ny][nx]
                     min_y = ny
                     min_x = nx
@@ -75,7 +59,6 @@ def bfs(x, y):
         power_list[y][x] = max(0, power_list[y][x]-1)
 
     return min_x, min_y
-
 
 def make_kind(kind1, kind2):
     tmp = kind1+kind2
@@ -135,11 +118,12 @@ dy = [-1, 1, 0, 0]
 
 for _ in range(T):
 
-    # 1. 아침
+    #모든 사람에게 에너지 추가
     for y in range(N):
         for x in range(N):
             power_list[y][x] +=1
 
+    #그룹 별 대표 뽑기
     visited = [[0 for _ in range(N)] for _ in range(N)]
     depo = []
     for y in range(N):
@@ -148,18 +132,21 @@ for _ in range(T):
                 dpx, dpy = bfs(x, y)
                 if dpx > -1:
                     depo.append((dpx, dpy))
-
+                
+    #공격 순서 정하기
     depo = sort_depo(depo)
 
+    #공격 하기
     save_list = set()
     for x, y in depo:
         if not (x, y) in save_list:
             donggik(x, y)
 
-
+    #분야별 에너지 총합
     sum_dic = {'TCM': 0, 'TC': 0, 'TM': 0, 'CM': 0, 'M': 0, 'C': 0, 'T': 0}
     for y in range(N):
         for x in range(N):
             sum_dic[kind_list[y][x]]+=power_list[y][x]
 
+    #결과출력
     print(sum_dic['TCM'], sum_dic['TC'], sum_dic['TM'], sum_dic['CM'], sum_dic['M'], sum_dic['C'], sum_dic['T'])
