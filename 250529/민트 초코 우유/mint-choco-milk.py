@@ -3,18 +3,15 @@ from collections import deque
 def cnt_kind(s):
     return len(set(s))
 
-
 def sort_depo(list):
     global kind_list, power_list, N
 
-    sort_power_list = sorted(list, key=lambda xy: (
+    return sorted(list, key=lambda xy: (
         cnt_kind(kind_list[xy[1]][xy[0]]), 
         -power_list[xy[1]][xy[0]], 
         xy[1], 
         xy[0]
     ))   
-
-    return sort_power_list
 
 # 그룹 찾기, 힘 계산하기, 대표찾기
 def bfs(x, y):
@@ -102,6 +99,7 @@ def donggik(x, y):
 
                 if want_x < 1:
                     break
+
             else: # 약한전파성공
                 kind_list[y][x] = make_kind(kind_list[y][x], donggik_kind)
                 power_list[y][x]+=want_x
@@ -129,6 +127,7 @@ for _ in range(T):
         for x in range(N): 
             if visited[y][x] == 0:
                 dpx, dpy = bfs(x, y)
+                depo.append((dpx, dpy))
                 
     #공격 순서 정하기
     depo = sort_depo(depo)
