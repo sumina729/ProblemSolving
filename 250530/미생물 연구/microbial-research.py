@@ -54,7 +54,7 @@ def remove_(N, i, pan):
             if pan[y][x] == i:
                 pan[y][x] = 0
 
-def remove_tong(pan, i, N, remove_i_list):
+def remove_tong(pan, i, N):
 
     visited = [[0 for _ in range(N)]for _ in range(N)]
     cnt = 0
@@ -64,7 +64,6 @@ def remove_tong(pan, i, N, remove_i_list):
                 cnt+=1
                 if cnt>1:
                     remove_(N, i, pan)
-                    remove_i_list.add(i)
                     ############디버깅용##########  
                     # print()
                     # print(i,"번 지움")
@@ -127,7 +126,6 @@ def set_pan(pan, order_i, N):
         sx, sy = get_sxsy(new_pan, N, lx, ly)
         
         if sx == -1:
-            remove_i_list.add(i)
             continue
 
         mxl = sx-ix
@@ -141,9 +139,16 @@ def set_pan(pan, order_i, N):
 
     return new_pan
 
+
+def is_in(pan, i, N):
+    for p in pan:
+        if i in p:
+            return True
+
+    return False
+
 N, G = map(int, input().split())
 r1c1r2c2 = [list(map(int, input().split())) for _ in range(G)]
-remove_i_list = set()
 
 # print(N, G)
 # print(r1c1r2c2)
@@ -173,7 +178,7 @@ for r1, c1, r2, c2 in r1c1r2c2:
 
     #분리된 배양 용기 찾아서 지우기
     for i in range(1, qn): # 현재 들어온거 보다 전에 있는 거들 중
-        remove_tong(pan, i, N, remove_i_list)
+        remove_tong(pan, i, N)
     
 
     ############디버깅용##########  
@@ -188,7 +193,7 @@ for r1, c1, r2, c2 in r1c1r2c2:
     sum_list = [sum_(i, pan, N) for i in range(qn+1)]
     order_i = []
     for i in range(qn):
-        if not i+1 in remove_i_list:
+        if is_in(pan, i+1, N):
             order_i.append(i+1)
 
     order_i = sorted(order_i, key=lambda i: (-sum_list[i], i))
