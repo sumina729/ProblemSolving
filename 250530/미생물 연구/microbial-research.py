@@ -89,11 +89,14 @@ def sum_(i, pan, N):
     return cnt
 
 
-def get_sxsy(new_pan, N, lx, ly):
+def get_sxsy(new_pan, N, lx, ly, ix, iy, i):
     for x in range(N):
         for y in range(N-1, -1, -1):
             if new_pan[y][x] == 0 and x+lx-1 < N and y-ly+1 > -1:
-                return x, y
+                mxl = x-ix
+                myl = y-iy
+                if ok(new_pan, pan, mxl, myl, N, i):
+                    return x, y
     return -1, -1
             
 def get_ixiy(pan, i, N):
@@ -109,7 +112,15 @@ def get_ixiy(pan, i, N):
                 max_y = max(max_y, y)
 
     return min_x, max_y, max_x-min_x+1, max_y-min_y+1
-                
+
+def ok(new_pan, pan, mxl, myl, N, i):
+    for y in range(N):
+        for x in range(N):
+            if pan[y][x] == i and not new_pan[y+myl][x+mxl] == 0:
+                return False
+            
+    return True
+
 def move_pan(new_pan, pan, mxl, myl, N, i):
     for y in range(N):
         for x in range(N):
@@ -123,7 +134,7 @@ def set_pan(pan, order_i, N):
 
     for i in order_i:
         ix, iy, lx, ly = get_ixiy(pan, i, N)
-        sx, sy = get_sxsy(new_pan, N, lx, ly)
+        sx, sy = get_sxsy(new_pan, N, lx, ly, ix, iy, i)
         
         if sx == -1:
             continue
