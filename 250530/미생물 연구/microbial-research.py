@@ -203,7 +203,7 @@ for r1, c1, r2, c2 in r1c1r2c2:
     #배양용기 이동
     sum_list = [sum_(i, pan, N) for i in range(qn+1)]
     order_i = []
-    for i in range(qn):
+    for i in range(qn+1):
         if is_in(pan, i+1, N):
             order_i.append(i+1)
 
