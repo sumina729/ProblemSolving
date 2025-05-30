@@ -99,7 +99,9 @@ def ok(new_pan, pan, mxl, myl, N, i):
     for y in range(N):
         for x in range(N):
             if  pan[y][x] == i:
-                if not (-1<y+myl<N  and -1<x+mxl<N) or not new_pan[y+myl][x+mxl] == 0: #하나라도 범위에 넘어가거나, 다른 미생물이 있가면
+                nx = x+mxl
+                ny = y+myl
+                if not (-1<nx<N and -1<ny<N) or not new_pan[ny][nx] == 0: #하나라도 범위에 넘어가거나, 다른 미생물이 있가면
                     return False
     return True
             
@@ -131,9 +133,11 @@ def move_pan(new_pan, pan, mxl, myl, N, i):
     for y in range(N):
         for x in range(N):
             if pan[y][x] == i:
-                # if not new_pan[y+myl][x+mxl] == 0:
-                    # print("!!!!!!!이상한 위치 잡음 코드 다시보거나, 논리 다시 생각")
-                new_pan[y+myl][x+mxl] = i
+                nx = x+mxl
+                ny = y+myl
+                # if not new_pan[ny][nx] == 0:
+                #     print("!!!!!!!이상한 위치 잡음 코드 다시보거나, 논리 다시 생각")
+                new_pan[ny][nx] = i
 
 def set_pan(pan, order_i, N):
     new_pan = [[0 for _ in range(N)] for _ in range(N)]
@@ -151,7 +155,8 @@ def set_pan(pan, order_i, N):
         sx, sy = get_sxsy(new_pan, N, ix, iy, i)
 
         # print(ix, iy, "->", sx, sy)
-
+        if sx == -1:
+            continue 
         mxl = sx-ix
         myl = sy-iy
 
