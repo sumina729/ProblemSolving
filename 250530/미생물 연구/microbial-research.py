@@ -55,7 +55,6 @@ def remove_(N, i, pan):
                 pan[y][x] = 0
 
 def remove_tong(pan, i, N):
-
     visited = [[0 for _ in range(N)]for _ in range(N)]
     cnt = 0
     for y in range(N):
@@ -88,75 +87,79 @@ def sum_(i, pan, N):
 
     return cnt
 
-
-def get_sxsy(new_pan, N, lx, ly, ix, iy, i):
-    for x in range(N):
-        for y in range(N-1, -1, -1):
-            if new_pan[y][x] == 0 and x+lx-1 < N and y-ly+1 > -1:
-                mxl = x-ix
-                myl = y-iy
-                if ok(new_pan, pan, mxl, myl, N, i):
-                    return x, y
-    return -1, -1
-            
-def get_ixiy(pan, i, N):
-    min_x, max_x = N, -1
-    min_y, max_y = N, -1
-
-    for y in range(N):
-        for x in range(N):
-            if pan[y][x] == i:
-                min_x = min(min_x, x)
-                max_x = max(max_x, x)
-                min_y = min(min_y, y)
-                max_y = max(max_y, y)
-
-    return min_x, max_y, max_x-min_x+1, max_y-min_y+1
-
-def ok(new_pan, pan, mxl, myl, N, i):
-    for y in range(N):
-        for x in range(N):
-            if pan[y][x] == i and not new_pan[y+myl][x+mxl] == 0:
-                return False
-            
-    return True
-
-def move_pan(new_pan, pan, mxl, myl, N, i):
-    for y in range(N):
-        for x in range(N):
-            if pan[y][x] == i:
-                new_pan[y+myl][x+mxl] = i
-
-
-
-def set_pan(pan, order_i, N):
-    new_pan = [[0 for _ in range(N)] for _ in range(N)]
-
-    for i in order_i:
-        ix, iy, lx, ly = get_ixiy(pan, i, N)
-        sx, sy = get_sxsy(new_pan, N, lx, ly, ix, iy, i)
-        
-        if sx == -1:
-            continue
-
-        mxl = sx-ix
-        myl = sy-iy
-
-        # print(sx, sy, ix, iy, mxl, myl, lx, ly)
-        move_pan(new_pan, pan, mxl, myl, N, i)
-
-
-
-
-    return new_pan
-
-
 def is_in(pan, i, N):
     for p in pan:
         if i in p:
             return True
 
     return False
+
+def ok(new_pan, pan, mxl, myl, N, i):
+    
+    for y in range(N):
+        for x in range(N):
+            if  pan[y][x] == i:
+                if not (-1<y+myl<N  and -1<x+mxl<N) or not new_pan[y+myl][x+mxl] == 0: #하나라도 범위에 넘어가거나, 다른 미생물이 있가면
+                    return False
+    return True
+            
+def get_sxsy(new_pan, N, ix, iy, i):
+    for x in range(N):
+        for y in range(N-1, -1, -1):
+            if new_pan[y][x] == 0:
+                mxl = x-ix
+                myl = y-iy
+                if ok(new_pan, pan, mxl, myl, N, i):
+                    return x, y
+    return -1, -1
+
+def get_ixiy(pan, i, N):
+    min_x = N
+    max_y = -1
+
+    for y in range(N):
+        for x in range(N):
+            if pan[y][x] == i:
+                if (min_x, -max_y) > (x, -y):
+                    min_x = x
+                    max_y = y
+    # print("가장 왼쪽 아래", min_x, max_y)
+    return min_x, max_y #가장 왼쪽중, 가장 아래 죄표
+
+
+def move_pan(new_pan, pan, mxl, myl, N, i):
+    for y in range(N):
+        for x in range(N):
+            if pan[y][x] == i:
+                # if not new_pan[y+myl][x+mxl] == 0:
+                    # print("!!!!!!!이상한 위치 잡음 코드 다시보거나, 논리 다시 생각")
+                new_pan[y+myl][x+mxl] = i
+
+def set_pan(pan, order_i, N):
+    new_pan = [[0 for _ in range(N)] for _ in range(N)]
+
+    '''
+    옮기기
+    - 형태 유지, 범위 벗어나지x, 
+    - 최대한 x가 잔으 왼쪽 위치  -> 가장 왼쪽
+    - 여러개이면 y작은위치 -> 가장 아래
+    - 둘곳 없으면 사라짐
+    '''
+    for i in order_i: #순서대로 집어넣기
+        #i 미생물의 가장 왼쪽이면서 왼쪽중에 가장 아래 좌표
+        ix, iy = get_ixiy(pan, i, N) 
+        sx, sy = get_sxsy(new_pan, N, ix, iy, i)
+
+        # print(ix, iy, "->", sx, sy)
+
+        mxl = sx-ix
+        myl = sy-iy
+
+        # print(sx, sy, ix, iy, mxl, myl, lx, ly)
+        move_pan(new_pan, pan, mxl, myl, N, i)
+        
+
+    return new_pan
 
 N, G = map(int, input().split())
 r1c1r2c2 = [list(map(int, input().split())) for _ in range(G)]
@@ -174,7 +177,7 @@ for r1, c1, r2, c2 in r1c1r2c2:
 
     # print(sx, sy, lx, ly)
 
-    #배양용기 이동
+    #배양용기에 투입
     for y in range(ly):
         for x in range(lx):
             pan[sy+y][sx+x] = qn
@@ -188,7 +191,7 @@ for r1, c1, r2, c2 in r1c1r2c2:
     ############디버깅용########## 
 
     #분리된 배양 용기 찾아서 지우기
-    for i in range(1, qn): # 현재 들어온거 보다 전에 있는 거들 중
+    for i in range(1, qn): # 1번 부터 현재 들어온거 보다 전에 있는 거들 중
         remove_tong(pan, i, N)
     
 
@@ -201,21 +204,22 @@ for r1, c1, r2, c2 in r1c1r2c2:
     
     
     #배양용기 이동
-    sum_list = [sum_(i, pan, N) for i in range(qn+1)]
+    sum_list = [sum_(i, pan, N) for i in range(qn+1)] #0~qn
     order_i = []
-    for i in range(qn+1):
-        if is_in(pan, i+1, N):
-            order_i.append(i+1)
+    for i in range(1, qn+1): #1~qn 중에 
+        if is_in(pan, i, N): #현제 용기에 있는 미생물 고르고 넣기
+            order_i.append(i)
 
     order_i = sorted(order_i, key=lambda i: (-sum_list[i], i))
 
     ############디버깅용##########  
     # print()
     # print("배양용기 이동 순서")
+    # print(sum_list)
     # print(order_i)
-    ############디버깅용##########  
+    ############디버깅용##########
 
-    pan = set_pan(pan, order_i, N) #여기서 둘곳 없으면 지워집
+    pan = set_pan(pan, order_i, N)
 
     ############디버깅용##########  
     # print()
@@ -223,9 +227,7 @@ for r1, c1, r2, c2 in r1c1r2c2:
     # for y in range(N):
     #     print(pan[y])
     ############디버깅용########## 
-    
 
-    #실험결과 기록
     tu = set()
     sum = 0
     for y in range(N):
@@ -243,6 +245,4 @@ for r1, c1, r2, c2 in r1c1r2c2:
                         sum+= (sum_list[i1]*sum_list[i2])
     # print("답")
     print(sum)
-
-    # break
 
