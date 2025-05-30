@@ -8,8 +8,7 @@ def bfs(x, y, visited, i, N, pan):
 
     while que:
         x, y = que.popleft()
-        # for dx, dy in [(0, 1), (0, -1), (1,0), (-1, 0)]:
-        for dx, dy in [(1, 0), (0, 1)]:
+        for dx, dy in [(0, 1), (0, -1), (1,0), (-1, 0)]:
             nx = x+dx
             ny = y+dy
 
@@ -149,7 +148,7 @@ for r1, c1, r2, c2 in r1c1r2c2:
     sum = 0
     for y in range(N):
         for x in range(N):
-            for dx, dy in [(0, 1), (0, -1), (1,0), (-1, 0)]:
+            for dx, dy in [(0, 1), (1,0)]:
                 nx = x+dx
                 ny = y+dy
 
