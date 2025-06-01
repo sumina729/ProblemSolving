@@ -86,8 +86,8 @@ def dfs_move_s(cx, cy, pan, cd, sum):
             break
 
         if  pan[ny][nx][0] > 0: #가는 곳에 물고기 있으면
-            # 
-            new_pan = copy.deepcopy(pan)
+            # new_pan = copy.deepcopy(pan)
+            new_pan =  [[c[:] for c in r ] for r in pan]
 
             #상어이동
             nd = new_pan[ny][nx][1]
@@ -95,20 +95,9 @@ def dfs_move_s(cx, cy, pan, cd, sum):
             new_pan[ny][nx] = [0, nd]
             new_pan[cy][cx] = [-1, -1]
 
-            # print()
-            # print(nx, ny, new_pan[ny][nx], sum+ni)
-            # print("=== 상어 이동후 ===")
-            # for i in range(4):
-            #     print(new_pan[i])
-
             #물고기 이동
             for n in range(1, 17):
                 move_f(n, new_pan)
-
-            # print()
-            # print("=== 물고기어 이동후 ===")
-            # for i in range(4):
-            #     print(new_pan[i])
             
             sx, sy = get_xy(0, new_pan) 
             dfs_move_s(sx, sy, new_pan, new_pan[sy][sx][1], sum+ni)
@@ -116,13 +105,8 @@ def dfs_move_s(cx, cy, pan, cd, sum):
             is_end = False  
 
         l+=1
-        # break
     
     if is_end:
-        # print("잡은수", sum)
-        # print()
-        # print()
-        # print()
         ans = max(ans,sum)
 
     
@@ -137,12 +121,6 @@ for _ in range(4):
 
     pan.append(tmp)
 
-# for i in range(4):
-#     print(pan[i])
-
-# pan[y][x][0] -> 물고번호  상어=>0번, 빈칸 -1
-# pan[y][x][0] -> 물고기, 상어방향 , 빈칸 -1
-
 
 ni = pan[0][0][0]
 pan[0][0][0] = 0 # 상어로 변경
@@ -150,11 +128,6 @@ pan[0][0][0] = 0 # 상어로 변경
 #물고기 이동 1~16
 for n in range(1, 17):
     move_f(n, pan)
-
-    # print()
-    # print("===", n," 물고기 이동후 ===")
-    # for i in range(4):
-    #     print(pan[i])
 
 # 상어 이동
 sx, sy = get_xy(0, pan) 
