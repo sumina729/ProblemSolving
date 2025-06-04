@@ -233,11 +233,23 @@ def move_junsas(junsa_xy_list, dol_js_list, N, mx, my, sisun_pan):
 
         if jnx == mx and jny == my:
             # 수 올리기
+            # print("메두사 공격", jx, jy, jnx, jny)
             gong_n+=1
         else:
+            # print("이동", jx, jy, "->", jnx, jny)
             new_junsa_xy_list.append((jnx, jny))
 
     return new_junsa_xy_list, gong_n, move_n
+
+def gong_m(mx, my, junsa_xy_list):
+    new_junsa_xy_list = []
+    for jx, jy in junsa_xy_list:
+        if jx == mx and jy == my:
+            continue
+        new_junsa_xy_list.append((jx, jy))
+
+    # print(new_junsa_xy_list)
+    return new_junsa_xy_list
 
 # 입력
 N, M = map(int, input().split()) #마을크기, 전사수
@@ -265,9 +277,8 @@ else:
     for mx, my in path_xy:
         # print("1. 메두사 이동:", mx, my)
         # print("전사들", junsa_xy_list)
-        if (mx, my) in junsa_xy_list:
-            # print(mx, my, "메두사에게 공경")
-            junsa_xy_list.remove((mx, my))
+        junsa_xy_list = gong_m(mx, my, junsa_xy_list)
+        
 
         #메두사 시선
         sisun_pan, dol_js_list = get_sisun_pan(mx, my, pan, junsa_xy_list, N)
@@ -277,7 +288,6 @@ else:
         # for y in range(N):
         #     print(sisun_pan[y])
         # print("돌된전사:", dol_js_list)
-
 
         #전사 이동
         junsa_xy_list, gn, mn = move_junsas(junsa_xy_list, dol_js_list, N, mx, my, sisun_pan)
