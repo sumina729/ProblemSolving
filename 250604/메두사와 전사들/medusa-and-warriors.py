@@ -114,10 +114,11 @@ def get_sisun_pan_n(mx, my, N, sd, junsa_xy_list):
         
         if tmp_pan[sy][sx] == 0:
             tmp_pan[sy][sx] = 1
-            if (sx, sy) in junsa_xy_list:
-                # print("전사있음", sx, sy)
-                dol_js_list.append((sx, sy))
-                get_bang(sx, sy, tmp_pan, N, sd, 0)
+            for tjx, tjy in junsa_xy_list:
+                if sx == tjx and sy == tjy:
+                    # print("전사있음", sx, sy)
+                    dol_js_list.append((sx, sy))
+                    get_bang(sx, sy, tmp_pan, N, sd, 0)
         
         #좌
         for i in range(1, sn+1):
@@ -127,10 +128,11 @@ def get_sisun_pan_n(mx, my, N, sd, junsa_xy_list):
             if -1<nx<N and -1<ny<N:
                 if tmp_pan[ny][nx] == 0:
                     tmp_pan[ny][nx] = 1
-                    if (nx, ny) in junsa_xy_list:
-                        dol_js_list.append((nx, ny))
-                        get_bang(nx, ny, tmp_pan, N, sd, 1)
-                        # print("전사있음", nx, ny)
+                    for tjx, tjy in junsa_xy_list:
+                        if nx == tjx and ny == tjy:
+                            dol_js_list.append((nx, ny))
+                            get_bang(nx, ny, tmp_pan, N, sd, 1)
+                            # print("전사있음", nx, ny)
 
         #우
         for i in range(1, sn+1):
@@ -141,10 +143,11 @@ def get_sisun_pan_n(mx, my, N, sd, junsa_xy_list):
                 if tmp_pan[ny][nx] == 0:
                     tmp_pan[ny][nx] = 1
 
-                    if (nx, ny) in junsa_xy_list:
-                        dol_js_list.append((nx, ny))
-                        get_bang(nx, ny, tmp_pan, N, sd, 2)
-                        # print("전사있음", nx, ny)
+                    for tjx, tjy in junsa_xy_list:
+                        if nx == tjx and ny == tjy:
+                            dol_js_list.append((nx, ny))
+                            get_bang(nx, ny, tmp_pan, N, sd, 2)
+                            # print("전사있음", nx, ny)
     
     
     # for y in range(N):
