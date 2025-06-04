@@ -96,7 +96,7 @@ def get_sisun_pan_n(mx, my, N, sd, junsa_xy_list):
     global lrd_lisr, dx, dy
 
     tmp_pan = [[0 for _ in range(N)]for _ in range(N)]
-    dol_js_list = set()
+    dol_js_list = []
 
     ld = lrd_lisr[sd][0]
     rd = lrd_lisr[sd][1]
@@ -116,7 +116,7 @@ def get_sisun_pan_n(mx, my, N, sd, junsa_xy_list):
             tmp_pan[sy][sx] = 1
             if (sx, sy) in junsa_xy_list:
                 # print("전사있음", sx, sy)
-                dol_js_list.add((sx, sy))
+                dol_js_list.append((sx, sy))
                 get_bang(sx, sy, tmp_pan, N, sd, 0)
         
         #좌
@@ -128,7 +128,7 @@ def get_sisun_pan_n(mx, my, N, sd, junsa_xy_list):
                 if tmp_pan[ny][nx] == 0:
                     tmp_pan[ny][nx] = 1
                     if (nx, ny) in junsa_xy_list:
-                        dol_js_list.add((nx, ny))
+                        dol_js_list.append((nx, ny))
                         get_bang(nx, ny, tmp_pan, N, sd, 1)
                         # print("전사있음", nx, ny)
 
@@ -142,7 +142,7 @@ def get_sisun_pan_n(mx, my, N, sd, junsa_xy_list):
                     tmp_pan[ny][nx] = 1
 
                     if (nx, ny) in junsa_xy_list:
-                        dol_js_list.add((nx, ny))
+                        dol_js_list.append((nx, ny))
                         get_bang(nx, ny, tmp_pan, N, sd, 2)
                         # print("전사있음", nx, ny)
     
@@ -201,55 +201,52 @@ def move_junsa(jx, jy, mx, my, N, cnt, sisun_pan):
                 cl = nl
                 cx = nx
                 cy = ny
-    
-    if cx==jx and cy==jy:
-        # print("이동후(이동안함):", cx, cy, mx, my, abs(jx-mx) + abs(jy-my), cl)
-        return cx, cy, 0
 
-    # print("이동후(이동함):", cx, cy, mx, my, abs(jx-mx) + abs(jy-my), cl)
-    return cx, cy, 1
+    return cx, cy
             
 
 def move_junsas(junsa_xy_list, dol_js_list, N, mx, my, sisun_pan):
     gong_n = 0
     move_n = 0
-    new_junsa_xy_list = set()
+    new_junsa_xy_list = []
 
     # print(junsa_xy_list)
     for jx, jy in junsa_xy_list:
         # print(jx, jy)
         if (jx, jy) in dol_js_list: #돌 됐으면 이동 x
             # print("동되거 이동안함:",jx, jy)
-            new_junsa_xy_list.add((jx, jy))
+            new_junsa_xy_list.append((jx, jy))
             continue
     
-    
         # print("이동전:", jx, jy, mx, my)
-        for cnt in range(2):
-            jx, jy, m = move_junsa(jx, jy, mx, my, N, cnt, sisun_pan)
-            move_n+=m
+        
 
-        if jx == mx and jy == my:
+        for cnt in range(2):
+            jnx, jny = move_junsa(jx, jy, mx, my, N, cnt, sisun_pan)
+            
+            if jnx == jx and jny == jy: 
+                break
+            # print("이동우",jnx, jny)
+            jx = jnx
+            jy = jny
+            move_n+=1
+
+        if jnx == mx and jny == my:
             # 수 올리기
             gong_n+=1
         else:
-            new_junsa_xy_list.add((jx, jy))
+            new_junsa_xy_list.append((jnx, jny))
 
     return new_junsa_xy_list, gong_n, move_n
-
-
-
-
-
 
 # 입력
 N, M = map(int, input().split()) #마을크기, 전사수
 Sy, Sx, Ey, Ex = map(int, input().split())
 rici_list = list(map(int, input().split()))
 pan = [list(map(int, input().split())) for _ in range(N)]
-junsa_xy_list = set()
+junsa_xy_list = []
 for i in range(M):
-    junsa_xy_list.add((rici_list[i*2+1], rici_list[i*2])) #(x, y)
+    junsa_xy_list.append((rici_list[i*2+1], rici_list[i*2])) #(x, y)
 
 # print()
 # print(N, M)
@@ -259,41 +256,37 @@ for i in range(M):
 
 #메두사 경로 찾기
 path_xy = get_path(Sx,Sy, Ex, Ey, pan, N)
+# print("메두사 경로")
+# print(path_xy)
 
 if path_xy == -1:
     print("-1")
 else:
     for mx, my in path_xy:
         # print("1. 메두사 이동:", mx, my)
+        # print("전사들", junsa_xy_list)
         if (mx, my) in junsa_xy_list:
+            # print(mx, my, "메두사에게 공경")
             junsa_xy_list.remove((mx, my))
 
         #메두사 시선
         sisun_pan, dol_js_list = get_sisun_pan(mx, my, pan, junsa_xy_list, N)
 
-        # print("2. 메두사 시선:")
         # print()
+        # print("2. 메두사 시선:")
         # for y in range(N):
         #     print(sisun_pan[y])
-        # print(dol_js_list)
+        # print("돌된전사:", dol_js_list)
 
 
         #전사 이동
         junsa_xy_list, gn, mn = move_junsas(junsa_xy_list, dol_js_list, N, mx, my, sisun_pan)
         print(mn, len(dol_js_list), gn)
-        
+        # print()
+        # print()
+        # print()
 
         # break
-
-
-
-    
-
-
-
-
-
-
 
     print(0)
     
