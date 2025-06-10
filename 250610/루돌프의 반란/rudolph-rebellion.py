@@ -1,23 +1,4 @@
-#am 8:30
-import sys
-
-sys.stdin = open("input.txt","r")
-sys.stdout = open("output.txt","w")
-
-def debug_print():
-    global N
-    for y in range(N):
-        for x in range(N):
-            i = is_in_santa(-1, y, x, santa_list)
-            if not i == -1:
-                print(santa_list[i][0], end=" ")
-            elif y == ry and x == rx:
-                print("r", end=" ")
-            else:
-                print("-", end=" ")
-        print()
-
-
+#am 8:30 ~ pm 12:56
 def is_end(santa_list):
     global N, M, P, C, D
 
@@ -36,7 +17,6 @@ def adjust_sg(santa_list):
         if sg > -1: #탈락 안한거만
             sg = max(0, sg-1)
             santa_list[i] = [sn, sy, sx, sj, sg]
-
 
 def dist(y1, x1, y2, x2):
     return (x1 - x2)**2 + (y1 - y2)**2
@@ -60,13 +40,9 @@ def move_ryrx(ry, rx, santa_list):
             santa_lyx.append([l, sy, sx])
 
     santa_lyx.sort(key=lambda x: (x[0], -x[1], -x[2]))
-    # print("살아있는 산타중 가까우면서 수선순쥐 만족하는 순서 솔팅[l, sy, sx]")
-    # print(santa_lyx)
 
     go_sy = santa_lyx[0][1]
     go_sx = santa_lyx[0][2]
-
-    # print("가잘 가까운 산타(sy, sx): ", go_sy, go_sx)
 
     dy = [1, -1, 0, 0, 1, -1, 1, -1]
     dx = [0, 0, -1, 1, -1, -1, 1, 1]
@@ -87,7 +63,6 @@ def move_ryrx(ry, rx, santa_list):
                 go_rx = nx
                 go_rd = i
 
-    # print("루돌푸이동(ry, rx, rd):", go_ry, go_rx, go_rd)
     return go_ry, go_rx, go_rd
 
 def conplict_from_ryrx_to_sysx(ry, rx, santa_list, rd):
@@ -100,8 +75,6 @@ def conplict_from_ryrx_to_sysx(ry, rx, santa_list, rd):
                 # print(sn, "번 상타와 충돌(루->산)(함수구현하기)")
                 conplict(i, sn, sy, sx, sj, sg, 0, rd, santa_list)
                 return
-
-    # print("충돌안남")
 
 def conplict_from_sysx_to_ryrx(i, sn, sy, sx, sj, sg, ry, rx, santa_list, sd):
     global N, M, P, C, D
@@ -123,18 +96,6 @@ def conplict(i, sn, sy, sx, sj, sg, C_or_D, di, santa_list):
         nx = sx+rdx[di]*C
 
         sj += C
-        if is_in_pan(ny, nx):
-            if is_not_in_santa(sn, ny, nx, santa_list): #다른거 없으면
-                # print(sn, "번 상호작용 안하고, ", ny, nx, "안착")
-                santa_list[i] = [sn, ny, nx, sj, 2]  # 기절
-            else:
-                # print(ny, nx, "ㅇ에 다른산타있음", sn, "번  ", "상호작용(함수만들기)")
-                santa_list[i] = [sn, sy, sx, sj, 2] # 점수랑, 기절만 먼저 갱신
-                sanghojangyuong(i, sn, ny, nx, sj, sg, santa_list, C_or_D, di)
-
-        else:
-            # print(sn, "번 탈락")
-            santa_list[i] = [sn, -1, -1, sj, -1] #탈락
     else:
         sdy = [-1, 0, 1, 0]
         sdx = [0, 1, 0, -1]
@@ -144,19 +105,15 @@ def conplict(i, sn, sy, sx, sj, sg, C_or_D, di, santa_list):
 
         sj += D
 
-        if is_in_pan(ny, nx):
-            if is_not_in_santa(sn, ny, nx, santa_list):  # 다른거 없으면
-                # print(sn, "번 상호작용 안하고, ", ny, nx, "안착")
-                santa_list[i] = [sn, ny, nx, sj, 2]  # 기절
-            else:
-
-                # print(ny, nx, "ㅇ에 다른산타있음", sn, "번  ", "상호작용(함수만들기)")
-                santa_list[i] = [sn, sy, sx, sj, 2] # 점수랑, 기절만 먼저 갱신
-                sanghojangyuong(i, sn, ny, nx, sj, sg, santa_list, C_or_D, di)
-
+    if is_in_pan(ny, nx):
+        if is_not_in_santa(sn, ny, nx, santa_list):  # 다른거 없으면
+            santa_list[i] = [sn, ny, nx, sj, 2]  # 기절
         else:
-            # print(sn, "번 탈락")
-            santa_list[i] = [sn, -1, -1, sj, -1]  # 탈락
+            santa_list[i] = [sn, sy, sx, sj, 2]  # 점수랑, 기절만 먼저 갱신
+            sanghojangyuong(i, sn, ny, nx, sj, sg, santa_list, C_or_D, di)
+    else:
+        # print(sn, "번 탈락")
+        santa_list[i] = [sn, -1, -1, sj, -1]  # 탈락
 
     return
 
@@ -176,7 +133,6 @@ def sanghojangyuong(si, sn, ny, nx, sj, sg, santa_list, C_or_D, di):
 
     ci = si
 
-
     if C_or_D == 0: #C 사용
         dy = [1, -1, 0, 0, 1, -1, 1, -1]
         dx = [0, 0, -1, 1, -1, -1, 1, 1]
@@ -195,22 +151,10 @@ def sanghojangyuong(si, sn, ny, nx, sj, sg, santa_list, C_or_D, di):
             santa_list[ci] = [santa_list[ci][0], ny, nx, santa_list[ci][3], santa_list[ci][4]]
             break
         else:
-
             santa_list[ci] = [santa_list[ci][0], ny, nx, santa_list[ci][3], santa_list[ci][4]]
 
             ci = nsi
-
             sn, ny, nx = santa_list[ci][0],  santa_list[ci][1]+dy[di],  santa_list[ci][2]+dx[di]
-            # print(santa_list[ci], "위치 이동함")
-
-
-
-
-
-
-
-
-
 
 def is_not_in_santa(n, y, x, santa_list):
     global N, M, P, C, D
@@ -246,8 +190,6 @@ def move_sysx_sn(sn, sy, sx, ry, rx, santa_list):
                 go_sx = nx
                 go_sd = i
 
-    # print(sn,"번 싼타 이동", sy, sx, "->", go_sy, go_sx)
-
     return go_sy, go_sx,go_sd
 
 def move_sysx(ry, rx, santa_list):
@@ -261,10 +203,7 @@ def move_sysx(ry, rx, santa_list):
         if sg == 0: #탈락 아니면서, 기절 아닌거만
             sy, sx, sd = move_sysx_sn(sn, sy, sx, ry, rx, santa_list)
             if not sd == -1:
-                # print("이동안함")
-                # continue
                 conplict_from_sysx_to_ryrx(i, sn, sy, sx, sj, sg, ry, rx, santa_list, sd) # 여기서 이동까지
-            # debug_print()
 
 N, M, P, C, D = map(int, input().split())
 
@@ -276,37 +215,19 @@ for _ in range(P):
 ry-=1
 rx-=1
 
-# print("초기입력")
-# print("N, M, P, C, D:", N, M, P, C, D)
-# print("루돌푸(ry, rx):", ry, rx)
-# print("산타[sn, sy, sx, sj, sg]:")
-# for i in range(P):
-#     print(santa_list[i])
-
-a = 0
 for turn in range(1, M+1):
-    # print("-------",turn,"턴 시작-------")
-    # debug_print()
 
     #모튼 산타가 탈락이면 끝
     if is_end(santa_list):
-        # print("산타 모두 탈락함")
         break
 
     #루돌푸 움직임
     ry, rx, rd = move_ryrx(ry, rx, santa_list)
     conplict_from_ryrx_to_sysx(ry, rx, santa_list, rd)
-    # debug_print()
 
     move_sysx(ry, rx, santa_list)
-    # print("산타이동 후 ")
-    # for i in range(P):
-    #     print(santa_list[i])
 
-
-
-
-    #살라있는 루돌푸에게 점수
+    #살아있는 루돌푸에게 점수
     for i in range(P):
         sn, sy, sx, sj, sg = santa_list[i]
         if sg > -1:  # 탈락 안한거만
@@ -314,14 +235,8 @@ for turn in range(1, M+1):
 
     # 턴 끝나고 기절 체크
     adjust_sg(santa_list)
-    # print("턴 끝, 다음을 위한 기절 체크 까지 하고 산타 정보")
-    # for i in range(P):
-    #     print(santa_list[i])
 
-    # if turn == 4:
-    #     break
-
-santa_list.sort(key=lambda x: x[0])
 #정답출력
+santa_list.sort(key=lambda x: x[0])
 for sn, sy, sx, sj, sg in santa_list:
     print(sj, end=" ")
