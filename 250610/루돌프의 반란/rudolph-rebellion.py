@@ -1,10 +1,21 @@
 #am 8:30
 import sys
-from re import split
 
 sys.stdin = open("input.txt","r")
 sys.stdout = open("output.txt","w")
 
+def debug_print():
+    global N
+    for y in range(N):
+        for x in range(N):
+            i = is_in_santa(-1, y, x, santa_list)
+            if not i == -1:
+                print(santa_list[i][0], end=" ")
+            elif y == ry and x == rx:
+                print("r", end=" ")
+            else:
+                print("-", end=" ")
+        print()
 
 
 def is_end(santa_list):
@@ -175,7 +186,7 @@ def sanghojangyuong(si, sn, ny, nx, sj, sg, santa_list, C_or_D, di):
         dx = [0, 1, 0, -1]
 
     while True:
-        if not is_in_santa(sn, ny, nx, santa_list):
+        if not is_in_pan(ny, nx):
             santa_list[ci] = [sn, -1, -1, santa_list[ci][3], -1]
             break
 
@@ -249,11 +260,11 @@ def move_sysx(ry, rx, santa_list):
         sn, sy, sx, sj, sg = santa_list[i]
         if sg == 0: #탈락 아니면서, 기절 아닌거만
             sy, sx, sd = move_sysx_sn(sn, sy, sx, ry, rx, santa_list)
-            if sd == -1:
+            if not sd == -1:
                 # print("이동안함")
-                continue
-            conplict_from_sysx_to_ryrx(i, sn, sy, sx, sj, sg, ry, rx, santa_list, sd) # 여기서 이동까지
-
+                # continue
+                conplict_from_sysx_to_ryrx(i, sn, sy, sx, sj, sg, ry, rx, santa_list, sd) # 여기서 이동까지
+            # debug_print()
 
 N, M, P, C, D = map(int, input().split())
 
@@ -275,6 +286,7 @@ rx-=1
 a = 0
 for turn in range(1, M+1):
     # print("-------",turn,"턴 시작-------")
+    # debug_print()
 
     #모튼 산타가 탈락이면 끝
     if is_end(santa_list):
@@ -284,11 +296,15 @@ for turn in range(1, M+1):
     #루돌푸 움직임
     ry, rx, rd = move_ryrx(ry, rx, santa_list)
     conplict_from_ryrx_to_sysx(ry, rx, santa_list, rd)
+    # debug_print()
 
     move_sysx(ry, rx, santa_list)
     # print("산타이동 후 ")
     # for i in range(P):
     #     print(santa_list[i])
+
+
+
 
     #살라있는 루돌푸에게 점수
     for i in range(P):
@@ -302,7 +318,7 @@ for turn in range(1, M+1):
     # for i in range(P):
     #     print(santa_list[i])
 
-    # if turn == 10:
+    # if turn == 4:
     #     break
 
 santa_list.sort(key=lambda x: x[0])
