@@ -1,6 +1,5 @@
 import sys
 
-
 sys.stdin = open('input.txt', 'r')
 sys.stdout = open('output.txt', 'w')
 
@@ -151,11 +150,6 @@ ans_l = 0
 
 for k in range(K): # K초 반복
 
-    #종료조건 확인
-    if is_end(man_yx):
-        # print("!사람 다 탈출함, 종료!")
-        break
-
     # print("=============", k+1,"초 시작=============")
 
     #참가자 이동
@@ -166,6 +160,11 @@ for k in range(K): # K초 반복
             my, mx, mn = move_men(y, x, exit_y, exit_x, pan)
             ans_l+=mn #이동 거리 갱신
             man_yx[i] = [my, mx] #움직임 갱신
+
+    # 종료조건 확인
+    if is_end(man_yx):
+        # print("!사람 다 탈출함, 종료!")
+        break
 
     # print("man_yx[y, x]:", man_yx, ans_l)
 
