@@ -50,7 +50,9 @@ def move_bfs(gisa_pan, y, x, move_di, gisa_i):
             nx = cx + dx[i]
 
             if i == move_di:
+                # print(i, gisa_pan[ny][nx])
                 if not is_in_pan(ny, nx) or gisa_pan[ny][nx] == -1: #즉 벽이면
+                    # print("이동못함")
                     return -1
 
                 elif gisa_pan[ny][nx] > 0: #그 방향으로난 다른 기사로 이동
@@ -65,6 +67,10 @@ def move_bfs(gisa_pan, y, x, move_di, gisa_i):
                         move_gisa_i.add(gisa_pan[ny][nx]-1)
                     visited[ny][nx] = 1
 
+    # print("이동해야 하는 블럭들")
+    # for y in range(L):
+    #     print(visited[y])
+
     return move_gisa_i
 
 def move_gisa(move_gisa_list, gisa, pan, move_di, gisa_i):
@@ -72,20 +78,24 @@ def move_gisa(move_gisa_list, gisa, pan, move_di, gisa_i):
 
     for i in range(N):
         if i in move_gisa_list:  # 움직이는 기사만
-
+            cnt = 0
             gy, gx, gh, gw, gk = gisa[i]
             gy += dy[move_di]
             gx += dx[move_di]
-
-            if not gisa_i == i:
-                cnt = 0
-                for y in range(gh):
-                    for x in range(gw):
-                        if pan[gy + y][gx + x] ==  1:
-                            cnt+=1
-                gk-=cnt
-
+            for y in range(gh):
+                for x in range(gw):
+                    if pan[gy + y][gx + x] ==  1:
+                        cnt+=1
+            gk-=cnt
+            # print(i, gy, gx, gh, gw, gk)
             gisa[i] = [gy, gx, gh, gw, gk]
+        elif gisa_i == i:
+            gy, gx, gh, gw, gk = gisa[i]
+            gy += dy[move_di]
+            gx += dx[move_di]
+            # print("민거는 노노:", i, gy, gx, gh, gw, gk)
+            gisa[i] = [gy, gx, gh, gw, gk]
+
 
 L,N,Q = map(int, input().split())
 pan = [list(map(int, input().split())) for _ in range(L)]
@@ -105,22 +115,48 @@ for _ in range(Q):
     i-=1
     go_list.append([i, d])
 
+# print("초기세팅")
+# print("L,N,Q", L,N,Q)
+# print("pan")
+# for y in range(L):
+#     print(pan[y])
+# print("gisa[y, x, h, w, k]", gisa)
+# print("go_list", go_list)
+
+
 for q in range(Q):
 
+    # print("==========",q+1, "번째 명령 시작 ==========")
     gisa_i, move_di = go_list[q]
+    # print(gisa_i,"번", move_di,"방향")
 
     if gisa[gisa_i][4] < 1:
         # print("체스판에서 사라진 기사임!")
         continue
 
     gisa_pan = make_gisa_pan(gisa, pan)
+    # print("기사판 만들기(벽 포함)")
+    # for y in range(L):
+    #     print(gisa_pan[y])
 
     move_gisa_list = move_bfs(gisa_pan, gisa[gisa_i][0], gisa[gisa_i][1], move_di, gisa_i)
     if move_gisa_list == -1:
+        # break
         continue
 
+    # print(move_gisa_list)
     move_gisa(move_gisa_list, gisa, pan, move_di, gisa_i)
     gisa_pan = make_gisa_pan(gisa, pan)
+    # print("이동후")
+    # for y in range(L):
+    #     print(gisa_pan[y])
+
+    # print("gisa[y, x, h, w, k]", gisa)
+
+
+
+    # break
+
 
 ans = 0
 for i in range(N):
