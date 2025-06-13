@@ -78,7 +78,7 @@ def bfs(pan, gy, gx):
     que = deque()
     que.append((gy, gx))
     visited[gy][gx] = 1
-    max_y = gy
+    max_y = gy + 1
 
     while que:
         cy, cx = que.popleft()
@@ -88,22 +88,22 @@ def bfs(pan, gy, gx):
             nx = cx+dx[i]
 
             if -1<ny<N and -1<nx<M and visited[ny][nx] == 0:
-                if pan[cy][cx] == 4 and pan[ny][nx] > 0: #4방향 모두 이동 가능
+                if pan[cy][cx] == 4: #4방향 모두 이동 가능
                     que.append((ny, nx))
                     visited[ny][nx] = 1
-                    max_y = max(ny, max_y)
+                    max_y = max(ny + 1, max_y)
 
                 elif pan[cy][cx] == 2:
                     if pan[ny][nx] > 0: #1, 2, 4 이동 가능
                         que.append((ny, nx))
                         visited[ny][nx] = 1
-                        max_y = max(ny, max_y)
+                        max_y = max(ny + 1, max_y)
 
                 elif pan[cy][cx] == 1:
                     if pan[ny][nx] == 4: #가운데로만 이동가능
                         que.append((ny, nx))
                         visited[ny][nx] = 1
-                        max_y = max(ny, max_y)
+                        max_y = max(ny + 1, max_y)
                 else:
                     print("논리 이상함")
 
@@ -111,7 +111,7 @@ def bfs(pan, gy, gx):
     # for y in range(N):
     #     print(visited[y])
 
-    return max_y+1
+    return max_y
 
 N, M, K = map(int, input().split())
 k_list = []
@@ -126,30 +126,27 @@ pan = [[0 for _ in range(M)] for _ in range(N)]
 # print("N, M, K", N, M, K)
 # print("[x, i]:", k_list)
 
-if False:
-    print("틀림")
-else:
-    ans = 0
-    for fx, di in k_list:
-        # print("===============정령정보[fx, di]", fx, di, "==================")
+ans = 0
+for fx, di in k_list:
+    # print("===============정령정보[fx, di]", fx, di, "==================")
 
-        gy, gx =  move_golem(-3, fx, pan, di)
+    gy, gx =  move_golem(-2, fx, pan, di)
 
-        #이동
-        if gy ==  -1:
-            #이동했는데 범위밖이면 패스
-            # print("!!이동했는데 범위밖!! 판 초기화")
-            pan = [[0 for _ in range(M)] for _ in range(N)]
-            continue
+    #이동
+    if gy ==  -1:
+        #이동했는데 범위밖이면 패스
+        # print("!!이동했는데 범위밖!! 판 초기화")
+        pan = [[0 for _ in range(M)] for _ in range(N)]
+        continue
 
-        # print("골룸 안착")
-        # for y in range(N):
-        #     print(pan[y])
+    # print("골룸 안착")
+    # for y in range(N):
+    #     print(pan[y])
 
 
-        #정령 가장 아래로 이동
-        ans+=bfs(pan, gy, gx)
+    #정령 가장 아래로 이동
+    ans+=bfs(pan, gy, gx)
 
-        # break
+    # break
 
-    print(ans)
+print(ans)
