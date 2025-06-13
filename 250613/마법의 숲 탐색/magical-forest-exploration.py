@@ -126,8 +126,8 @@ pan = [[0 for _ in range(M)] for _ in range(N)]
 # print("N, M, K", N, M, K)
 # print("[x, i]:", k_list)
 
-if N == 54 and M == 38 and  K ==  751:
-    print("26179")
+if False:
+    print("틀림")
 else:
     ans = 0
     for fx, di in k_list:
