@@ -77,7 +77,7 @@ def fight_m1_m2(m1, m2, men_xyd_list, men_gong_list, men_point_list, chong_pan, 
     if (m1_gong, men_gong_list[m1][0]) > (m2_gong, men_gong_list[m2][0]):
         win_m = m1
         lose_m = m2
-    elif m1_gong < m2_gong:
+    else:
         win_m = m2
         lose_m = m1
 
