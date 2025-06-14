@@ -1,4 +1,7 @@
 #8:55
+#10:44
+
+#누적합 안해줘서 틀림
 
 import sys
 
@@ -24,7 +27,6 @@ def move_men(my, mx, md):
     if is_in_pan(ny, nx):
         return ny, nx, nd
 
-    # print("방향 바꿈")
     md = (md+2)%4
 
     ny = my + dy[md]
@@ -40,8 +42,6 @@ def move_men(my, mx, md):
 
 def get_gi(cy, cx, ci, men_xyd_list):
     global N, M, K
-
-    # cy, cx, cd = men_xyd_list[ci]
 
     for i in range(M):
         if i == ci: #자기 는 빼기
@@ -64,9 +64,6 @@ def get_chong(i, ny, nx, chong_pan, men_gong_list):
     men_gong_list[i][1] = chongs.pop() #가장 큰거 하나얻기
     chong_pan[ny][nx] = chongs #가장큰거 하나뺸 리스트 바닥에
 
-    # print(i, "사람이 얻은총 최종(자신, 총):", men_gong_list[i])
-    # print(ny, nx, "바닥에 있는 총:",chong_pan[ny][nx])
-
 
 def fight_m1_m2(m1, m2, men_xyd_list, men_gong_list, men_point_list, chong_pan, cy, cx):
     global N, M, K
@@ -74,47 +71,23 @@ def fight_m1_m2(m1, m2, men_xyd_list, men_gong_list, men_point_list, chong_pan, 
     m1_gong = sum(men_gong_list[m1])
     m2_gong = sum(men_gong_list[m2])
 
-    # print(m1, "번 공격력", men_gong_list[m1])
-    # print(m2, "번 공격력", men_gong_list[m2])
-
     win_m = -1
     lose_m = -1
 
-    if m1_gong > m2_gong:
+    if (m1_gong, men_gong_list[m1][0]) > (m2_gong, men_gong_list[m2][0]):
         win_m = m1
         lose_m = m2
     elif m1_gong < m2_gong:
         win_m = m2
         lose_m = m1
-    else: #같을때
-        if men_gong_list[m1][0] > men_gong_list[m2][0]:
-            win_m = m1
-            lose_m = m2
-        elif men_gong_list[m1][0] < men_gong_list[m2][0]:
-            win_m = m2
-            lose_m = m1
 
-    if win_m == -1:
-        print("논리오류")
-
-    # print("이긴사람:", win_m)
-    # print("진사람:", lose_m)
-
-    # men_point_list[win_m] = abs(m1_gong-m2_gong)
+    #포인트 획득
     men_point_list[win_m] = men_point_list[win_m]+abs(m1_gong-m2_gong)
-    # print(win_m,"번 사람 포인트 획득", men_point_list)
-
-
 
     #진사람 총두기
     if men_gong_list[lose_m][1] > 0: #총 있으면
         chong_pan[cy][cx].append(men_gong_list[lose_m][1])
         men_gong_list[lose_m][1] = 0
-
-        # print(cy, cx, "위치의 총등", chong_pan[cy][cx])
-        # print(lose_m, "번 사람의 총 ",men_gong_list[lose_m])
-    # else:
-        # print("진사람 총없음")
 
     #진사람 이동
     ly, lx,ld  = men_xyd_list[lose_m]
@@ -124,9 +97,7 @@ def fight_m1_m2(m1, m2, men_xyd_list, men_gong_list, men_point_list, chong_pan, 
         nx = lx + dx[ndi]
 
         if is_in_pan(ny, nx) and get_gi(ny, nx, lose_m, men_xyd_list) ==  -1:
-
             men_xyd_list[lose_m] = [ny, nx, ndi]
-            # print(ly, lx, ld, "에서 진사람 이동완료", men_xyd_list[lose_m])
 
             if len(chong_pan[ny][nx]) > 0: #이동칸에 총있으면
                 get_chong(lose_m, ny, nx, chong_pan, men_gong_list)
@@ -137,28 +108,17 @@ def fight_m1_m2(m1, m2, men_xyd_list, men_gong_list, men_point_list, chong_pan, 
     if len(chong_pan[wy][wx]) > 0:  # 이동칸에 총있으면
         get_chong(win_m, wy, wx, chong_pan, men_gong_list)
 
-
-
-
-
-
-
 #격자, 사람수, 라운드
 N, M, K =  map(int, input().split())
 tmp_pan = [list(map(int, input().split()))for _ in range(N)]
 tmp_men = [list(map(int, input().split()))for _ in range(M)]
 
-
-# print("N, M, K: ", N, M, K)
-
 chong_pan = [[[] for _ in range(N)]for _ in range(N)]
-# print("총 이 있는 판")
 for y in range(N):
     for x in range(N):
         if tmp_pan[y][x] ==  0:
             continue
         chong_pan[y][x] = [tmp_pan[y][x]]
-    # print(chong_pan[y])
 
 men_xyd_list = []
 men_gong_list = []
@@ -169,26 +129,15 @@ for i in range(M):
     men_xyd_list.append([my-1, mx-1, md])
     men_gong_list.append([ms, 0])
 
-# print("사람 위치[y, x, d]")
-# print(men_xyd_list)
-# print("사람 공격[초기능력, 총능력(총없으면0)]")
-# print(men_gong_list)
-# print("사람 포인트")
-# print(men_point_list)
-
-
 for k in range(K):
-    # print("===============", k+1, "라운드 시작 ===============")
 
     for i in range(M): #1번부터 순서대로 이동
 
-        # print("----",i, "번 사람이동----")
         my, mx, md = men_xyd_list[i]
 
-        # print("이동전(my, mx, md):", my, mx, md)
+        #이동시키기
         cy, cx, cd = move_men(my, mx, md)
         men_xyd_list[i] = [cy, cx, cd]
-        # print("이동후(cy, cx, cd):", cy, cx, cd)
 
         #i사람 위치에 있는 플레이어 구하기
         gi = get_gi(cy, cx, i, men_xyd_list)
@@ -199,15 +148,4 @@ for k in range(K):
         else: # 위치에 사람 있음
             fight_m1_m2(i, gi, men_xyd_list, men_gong_list, men_point_list, chong_pan,cy, cx)
 
-
-
-
-
-
-
-        # break
-    # break
-
 print(*men_point_list)
-
-
