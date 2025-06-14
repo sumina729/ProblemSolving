@@ -100,7 +100,8 @@ def fight_m1_m2(m1, m2, men_xyd_list, men_gong_list, men_point_list, chong_pan, 
     # print("이긴사람:", win_m)
     # print("진사람:", lose_m)
 
-    men_point_list[win_m] = abs(m1_gong-m2_gong)
+    # men_point_list[win_m] = abs(m1_gong-m2_gong)
+    men_point_list[win_m] = men_point_list[win_m]+abs(m1_gong-m2_gong)
     # print(win_m,"번 사람 포인트 획득", men_point_list)
 
 
