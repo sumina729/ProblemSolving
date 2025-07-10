@@ -2,7 +2,7 @@ from collections import deque
 
 S = int(input())
 
-num_list = [[-1 for S in range(10000) ] for S in range(10000)]
+num_list = [[-1 for S in range(1001) ] for S in range(1001)]
 
 
 que = deque()
@@ -28,7 +28,7 @@ while que:
             print(num_list[n][c]+1)
             exit()
 
-        if num_list[nn][nc] == -1:
+        if -1<nn<1001 and  -1<nc<1001 and num_list[nn][nc] == -1:
             num_list[nn][nc] = num_list[n][c]+1
             que.append([nn, nc])
 
