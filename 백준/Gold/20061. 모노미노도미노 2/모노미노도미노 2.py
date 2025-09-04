@@ -8,22 +8,8 @@ block = [
     [[0, 0], [1, 0]] #새로로 긴거
 ]
 
-
 B_PAN = [[0 for _ in range(6)] for _ in range(4)]
 G_PAN = [[0 for _ in range(4)] for _ in range(6)]
-
-
-
-############## 디버깅용 판 ##############
-# print("-- G --")
-# for g in G_PAN:
-#     print(g)
-
-# print("-- B --")
-# for b in B_PAN:
-#     print(b)
-######################################
-    
 
 def set_pan(pi, bt, sy, sx):
 
@@ -84,8 +70,6 @@ def move_pan(pi, i):
     elif pi == 'B':
         B_PAN[0][i] = B_PAN[1][i] = B_PAN[2][i] = B_PAN[3][i] = 0
 
-        #오른쪽으로 당기기
-        # print(">>>", pi, i)
         for x in range(i, -1, -1):
             for y in range(4):
                 # print(">",y, x)
@@ -101,9 +85,7 @@ def get_jumsu(pi):
 
         if pi == 'G':
             s = G_PAN[i][0]+G_PAN[i][1]+G_PAN[i][2]+G_PAN[i][3]
-            # print("디버깅체크용 > ", pi, i)
             if s == 4: # 꽉차있으면
-                # print("한줄 꽉참", pi, i)
                 jumsu +=1
 
                 move_pan(pi, i)
@@ -113,7 +95,6 @@ def get_jumsu(pi):
         elif pi == 'B':
             s = B_PAN[0][i]+B_PAN[1][i]+B_PAN[2][i]+B_PAN[3][i]
             if s == 4: # 꽉차있으면
-                # print("한줄 꽉참", pi, i)
                 jumsu +=1
 
                 move_pan(pi, i)
@@ -126,29 +107,8 @@ def start_game(pi, bt, sy, sx):
     #판에 두기
     set_pan(pi, bt, sy, sx)
 
-    # print("판에 두기")
-    ############## 디버깅용 판 ##############
-    # print("-- G --")
-    # for g in G_PAN:
-    #     print(g)
-
-    # print("-- B --")
-    # for b in B_PAN:
-    #     print(b)
-    ######################################
-
     #점수체크하기
     jumsu += get_jumsu(pi)
-    # print("점수체크하기", jumsu)
-    ############## 디버깅용 판 ##############
-    # print("-- G --")
-    # for g in G_PAN:
-    #     print(g)
-
-    # print("-- B --")
-    # for b in B_PAN:
-    #     print(b)
-    ######################################
 
     #특별칸확인
     if pi == 'G':
@@ -160,7 +120,6 @@ def start_game(pi, bt, sy, sx):
             move_pan(pi, 5)
         elif s2 > 0:
             move_pan(pi, 5)
-
     
     elif pi =='B':
         s1 = B_PAN[0][0]+B_PAN[1][0]+B_PAN[2][0]+B_PAN[3][0]
@@ -172,30 +131,14 @@ def start_game(pi, bt, sy, sx):
         elif s2 > 0:
             move_pan(pi, 5)
 
-    # print("특별칸확인")
-    ############## 디버깅용 판 ##############
-    # print("-- G --")
-    # for g in G_PAN:
-    #     print(g)
-
-    # print("-- B --")
-    # for b in B_PAN:
-    #     print(b)
-    ######################################
-    
-
     return jumsu
 
 
 ans = 0
 for bt, by, bx in B:
-    # print("=====시작=====")
-    # print(bt, by, bx)
 
     ans += start_game("G", bt, by, bx)
     ans += start_game("B", bt, by, bx)
-
-    
 
 
 print(ans)
