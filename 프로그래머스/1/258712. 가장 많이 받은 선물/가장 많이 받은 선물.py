@@ -23,6 +23,15 @@ def solution(friends, gifts):
     
     for p in p_pan:
         p_list[p][2] = p_list[p][0]-p_list[p][1]
+        
+    
+    
+    #디버깅 프린트
+#     for p in p_pan:
+#         print(p_pan[p])
+    
+#     for p in p_list:
+#         print(p_list[p])
     
     #계산하기
     for f1 in friends:
@@ -31,19 +40,38 @@ def solution(friends, gifts):
                 continue
                 
             print(">",f1, f2)
-            if p_pan[f1][f2] > p_pan[f2][f1]:
-                ans_list[f1] +=1
-            elif p_pan[f1][f2] < p_pan[f2][f1]:
-                ans_list[f2] +=1
-                
-            else: # 같을때, 또는 둘다 0일때
-                if p_list[f1][2] > p_list[f2][2]:
+            if p_pan[f1][f2] > 0 or p_pan[f2][f1] > 0: #서로 주고 받은게 있을때
+                print(" ","선물 주고받음")
+                if p_pan[f1][f2] == p_pan[f2][f1]:
+                    
+                    if p_list[f1][2] == p_list[f2][2]:
+                        continue
+                    elif p_list[f1][2] > p_list[f2][2]:
+                        ans_list[f1] +=1
+                    else:
+                        ans_list[f2] +=1
+                    
+                else:
+                    if p_pan[f1][f2]  > p_pan[f2][f1]:
+                        ans_list[f1] +=1
+                    else:
+                        ans_list[f2] +=1
+                    
+                    
+                    
+            elif p_pan[f1][f2] == 0 and p_pan[f2][f1] == 0: #둘가 안줬을때
+                if p_list[f1][2] == p_list[f2][2]:
+                        continue
+                elif p_list[f1][2] > p_list[f2][2]:
                     ans_list[f1] +=1
-                elif p_list[f1][2] < p_list[f2][2]:
+                else:
                     ans_list[f2] +=1
+        
             
             p_pan[f1][f2] = -1
             p_pan[f2][f1] = -1
+            
+            
                 
     ans = 0      
     for p in ans_list:
