@@ -1,16 +1,11 @@
 def solution(nums):
     answer = 0
     
-    N = len(nums)
-    print(N)
+    l1 = len(nums)
+    l2 = len(set(nums))
     
-    nums_s = set(nums)
-    
-    
-    print(len(nums_s))
-    
-    if N//2 < len(nums_s):
-        answer = N//2
+    if l1//2 < l2:
+        answer = l1//2
     else:
-        answer = len(nums_s)
+        answer = l2
     return answer
